@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+#
+#
+# (c) 2017-2019 Fetal-Neonatal Neuroimaging & Developmental Science Center
+#                     Boston Children's Hospital
+#
+#              http://childrenshospital.org/FNNDSC/
+#                        dev@babyMRI.org
+#
+
+# System imports
+import  os
+import  sys
+sys.path.insert(1, os.path.join(os.path.dirname(__file__), '..'))
+import  argparse
+
+from    mgz2imgslices           import mgz2imgslices
+from    argparse            import RawTextHelpFormatter
+from    argparse            import ArgumentParser
+from    pfmisc._colors      import Colors
+import  pudb
+
+
+str_version = "1.0"
+
+str_desc    = Colors.CYAN + """
+
+                      _____ _                     _ _               
+                     / __  (_)                   | (_)              
+ _ __ ___   __ _ ____`' / /'_ _ __ ___   __ _ ___| |_  ___ ___  ___ 
+| '_ ` _ \ / _` |_  /  / / | | '_ ` _ \ / _` / __| | |/ __/ _ \/ __|
+| | | | | | (_| |/ / ./ /__| | | | | | | (_| \__ \ | | (_|  __/\__ \\
+|_| |_| |_|\__, /___|\_____/_|_| |_| |_|\__, |___/_|_|\___\___||___/
+            __/ |                        __/ |                      
+           |___/                        |___/                       
+
+            Converts mgz formats to jpg/png
+
+                    -- version """ + \
+           Colors.YELLOW + str_version + Colors.CYAN + """ --
+
+    'mgz2imgslices' converts .mgz files to more web-friendly formats such as
+    png and jpg.
+
+""" + Colors.NO_COLOUR
+
+def synopsis(ab_shortOnly=False):
+    scriptName = os.path.basename(sys.argv[0])
+    shortSynopsis = '''
+
+    NAME
+
+       mgz2imgslices.py 
+
+    SYNOPSIS
+
+        python mgz2imgslices.py                                         \\
+            [-i] [--inputFile] <inputFile>                              \\
+            [-o] [--outputFileStem] <outputFileStem>                    \\
+            [-t] [--outputFileType] <outputFileType>                    \\
+            [-n] [--normalize]                                          \\
+            [-l] [--lookuptable] <LUTcolumnToNameDirectories>           \\
+            [-s] [--skipLabelValueList] <ListOfLabelNumbersToSkip>      \\ 
+            [-w] [--wholeVolume]                                        \\        
+            [-h] [--help]                                               \\
+            [--json]                                                    \\
+            [--man]                                                     \\
+            [--meta]                                                    \\
+            [--savejson <DIR>]                                          \\
+            [-v <level>] [--verbosity <level>]                          \\
+            [--version]                                                 \\
+            [-y] [--synopsis]                                           \\
+            <inputDir>                                                  \\
+            <outputDir> 
+
+    BRIEF EXAMPLE
+
+        * Bare bones execution
+
+            mkdir in out && chmod 777 out
+            python mgz2imgslices.py   \\
+                                in    out
+
+    ''' % scriptName
+
+    description = '''
+
+    DESCRIPTION
+
+        `mgz2imgslices.py` ...
+
+    ARGS
+
+        [-i] [--inputFile] <inputFile>
+        Input file to convert. Should be a .mgz file
+
+        [-o] [--outputFileStem] <outputFileStem>
+        The output file stem to store conversion. If this is specified
+        with an extension, this extension will be used to specify the
+        output file type.
+
+        [-t] [--outputFileType] <outputFileType>
+        The output file type. If different to <outputFileStem> extension,
+        will override extension in favour of <outputFileType>. Should be a 'png' or 'jpg'
+
+        [-n] [--normalize]
+        If specified, will normalize the output image pixels to 0 and 1 values.
+
+        [-l] [--lookuptable] <LUTcolumnToNameDirectories>
+        Specifies if the label directories that are created should be named 
+        according to Label Number or Label Name. 
+        Can be wither "__val__", "__fs__"(uses the built in FreeSurferColorLUT.txt) 
+        or <LUTFilename.txt> provided by user from the inputdir
+        Default is "__val__" which is Label Numbers
+
+        [-s] [--skipLabelValueList] <ListOfLabelNumbersToSkip>
+        If specified as a comma separated string of label numbers,
+        will not create directories of those label numbers.
+
+        [-w] [--wholeVolume]
+        If specified, creates a diretory called "WholeVolume" (within the outputdir) 
+        containing PNG/JPG files including all labels.
+
+        [-h] [--help]
+        If specified, show help message and exit.
+        
+        [--json]
+        If specified, show json representation of app and exit.
+        
+        [--man]
+        If specified, print (this) man page and exit.
+
+        [--meta]
+        If specified, print plugin meta np_data and exit.
+        
+        [--savejson <DIR>] 
+        If specified, save json representation file to DIR and exit. 
+        
+        [-v <level>] [--verbosity <level>]
+        Verbosity level for app. Not used currently.
+        
+        [--version]
+        If specified, print version number and exit. 
+
+        [-y] [--synopsis]
+        Show short synopsis.
+        
+    GITHUB
+
+        o See https://github.com/FNNDSC/mgz2imgslices for more help and source.
+
+    ''' % (scriptName)
