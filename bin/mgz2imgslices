@@ -207,3 +207,21 @@ parser.add_argument('-v', '--version',
                     dest    = 'b_version',
                     action  = 'store_true',
                     default = False)
+
+# parse passed arguments
+args = parser.parse_args()
+
+# Do some minor CLI checks
+if args.b_version:
+    print("Version: %s" % str_version)
+    sys.exit(1)
+
+if args.man or args.synopsis:
+    print(str_desc)
+    if args.man:
+        str_help = synopsis(False)
+    else:
+        str_help = synopsis(True)
+    print(str_help)
+    sys.exit(1)
+
