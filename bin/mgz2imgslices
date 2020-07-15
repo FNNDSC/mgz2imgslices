@@ -163,10 +163,18 @@ parser.add_argument('-i', '--inputFile',
                     help='name of the input file within the inputDir'
                     dest='inputFile'
                     )
+parser.add_argument("-I", "--inputDir",
+                    help    = "input directory",
+                    dest    = 'inputDir',
+                    default = '')
 parser.add_argument('-o', '--outputFileStem', 
                     help='name of the output files within the outputDir'
                     dest='outputFileStem'
                     )
+parser.add_argument("-d", "--outputDir",
+                    help    = "output image directory",
+                    dest    = 'outputDir',
+                    default = '.')
 parser.add_argument('-t', '--outputFileType', 
                     help='output image file format'
                     dest='outputFileType',
