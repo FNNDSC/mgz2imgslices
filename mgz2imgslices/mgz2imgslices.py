@@ -24,8 +24,8 @@ class mgz2imgslices(object):
 
     def initialize(self):
 
-            self.str_inputdir            = ""
-            self.str_outputdir           = ""
+            self.str_inputDir            = ""
+            self.str_outputDir           = ""
             self.str_inputFile           = ""
             self.str_outputFileStem      = ""
             self.str_outputFileType      = "png"
@@ -40,6 +40,21 @@ class mgz2imgslices(object):
                                                 verbosity   = self.verbosity,
                                                 within      = self.__name__
                                                 )
+            if len(self.str_inputDir):
+                self.str_inputFile  = '%s/%s' % (self.str_inputDir, self.str_inputFile)
+            if not len(self.str_inputDir):
+                self.str_inputDir = os.path.dirname(self.str_inputFile)
+            if not len(self.str_inputDir): self.str_inputDir = '.'
+            str_fileName, str_fileExtension  = os.path.splitext(self.str_outputFileStem)
+            if len(self.str_outputFileType):
+                str_fileExtension            = '.%s' % self.str_outputFileType
+
+            if len(str_fileExtension) and not len(self.str_outputFileType):
+                self.str_outputFileType     = str_fileExtension
+
+            if not len(self.str_outputFileType) and not len(str_fileExtension):
+                self.str_outputFileType     = '.png'
+
 
     def readFSColorLUT(self, str_filename):
         l_column_names = ["#No", "LabelName"]
@@ -63,7 +78,7 @@ class mgz2imgslices(object):
             df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imgslices/FreeSurferColorLUT.txt")
             str_dirname = df_FSColorLUT.loc[df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
         else:
-            df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputdir, self.str_lookuptable))
+            df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
             str_dirname = df_FSColorLUT.loc[df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
 
         return str_dirname    
@@ -86,7 +101,7 @@ class mgz2imgslices(object):
                 # prevents lossy conversion
                 np_data=np_data.astype(np.uint8)
 
-                str_image_name = "%s/%s/%s-%00d.%s" % (self.str_outputdir, str_dirname, 
+                str_image_name = "%s/%s/%s-%00d.%s" % (self.str_outputDir, str_dirname, 
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
                 self.dp.qprint("Saving %s" % str_image_name, level = 2)
                 imageio.imwrite(str_image_name, np_data)
@@ -96,7 +111,7 @@ class mgz2imgslices(object):
 
         str_whole_dirname = self.str_wholeVolume
 
-        os.mkdir("%s/%s" % (self.str_outputdir, str_whole_dirname))
+        os.mkdir("%s/%s" % (self.str_outputDir, str_whole_dirname))
 
         # iterate through slices
         for current_slice in range(0, i_total_slices):
@@ -105,7 +120,7 @@ class mgz2imgslices(object):
             # prevents lossy conversion
             np_data=np_data.astype(np.uint8)
 
-            str_image_name = "%s/%s/%s-%00d.%s" % (self.str_outputdir, str_whole_dirname, 
+            str_image_name = "%s/%s/%s-%00d.%s" % (self.str_outputDir, str_whole_dirname, 
                 self.str_outputFileStem, current_slice, self.str_outputFileType)
             self.dp.qprint("Saving %s" % str_image_name, level = 2)
             imageio.imwrite(str_image_name, np_data)
@@ -120,7 +135,7 @@ class mgz2imgslices(object):
         if len(self.str_skipLabelValueList):
             self.l_skip         = self.str_skipLabelValueList.split(',')
 
-        mgz_vol = nib.load("%s/%s" % (self.str_inputdir, self.str_inputFile))
+        mgz_vol = nib.load("%s/%s" % (self.str_inputDir, self.str_inputFile))
 
         np_mgz_vol = mgz_vol.get_fdata()
         
@@ -138,7 +153,7 @@ class mgz2imgslices(object):
 
             self.dp.qprint("Processing %s.." % str_dirname, level = 1)
                 
-            os.mkdir("%s/%s" % (self.str_outputdir, str_dirname))
+            os.mkdir("%s/%s" % (self.str_outputDir, str_dirname))
 
             self.nparray_to_imgs(np_mgz_vol, item)
 
