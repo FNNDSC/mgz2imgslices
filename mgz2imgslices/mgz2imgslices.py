@@ -17,56 +17,90 @@ from    pfmisc.debug        import  debug
 
 class mgz2imgslices(object):
     """
-        mgz2imgslices accepts as input .mgz data
+        mgz2imgslices accepts as input an .mgz volume
         and converts each slice of the .mgz volume to a graphical
         display format such as png or jpg.
 
     """
+    def log(self, *args):
+        '''
+        get/set the internal pipeline log message object.
+
+        Caller can further manipulate the log object with object-specific
+        calls.
+        '''
+        if len(args):
+            self._log = args[0]
+        else:
+            return self._log
+
+    def name(self, *args):
+        '''
+        get/set the descriptive name text of this object.
+        '''
+        if len(args):
+            self.__name = args[0]
+        else:
+            return self.__name
+
+    def description(self, *args):
+        '''
+        Get / set internal object description.
+        '''
+        if len(args):
+            self.str_desc = args[0]
+        else:
+            return self.str_desc
 
     def __init__(self, **kwargs):
 
-            self.str_inputDir            = ""
-            self.str_outputDir           = ""
-            self.str_inputFile           = ""
-            self.str_outputFileStem      = ""
-            self.str_outputFileType      = "png"
-            self._b_normalize            = False
-            self.str_lookuptable         = "__val__"
-            self.str_skipLabelValueList  = ""
-            self.str_wholeVolume         = "wholeVolume"
-            self.l_skip             = []
-            self.__name__           = "mgz2imgslices"
-            self.verbosity          = 1
-            self.dp                 = pfmisc.debug(    
-                                                verbosity   = self.verbosity,
-                                                within      = self.__name__
-                                                )
+        self.str_desc                = ""
+        self.__name__                = "mgz2imgslices"
 
-            for key, value in kwargs.items():
-                if key == "inputFile":          self.str_inputFile          = value
-                if key == "inputDir":           self.str_inputDir           = value
-                if key == "outputDir":          self.str_outputDir          = value
-                if key == "outputFileStem":     self.str_outputFileStem     = value
-                if key == "outputFileType":     self.str_outputFileType     = value
-                if key == "normalize":          self._b_normalize           = value
-                if key == "lookuptable":        self.str_lookuptable        = value
-                if key == "skipLabelValueList": self.str_skipLabelValueList = value
-                if key == "wholeVolume":        self.str_wholeVolume        = value
+        self.str_inputDir            = ""
+        self.str_outputDir           = ""
+        self.str_inputFile           = ""
+        self.str_outputFileStem      = ""
+        self.str_outputFileType      = ""
+        self.str_label               = ""
+        self._b_normalize            = False
+        self.str_lookuptable         = ""
+        self.str_skipLabelValueList  = ""
+        self.str_wholeVolume         = ""
+        self.l_skip             = []
+        self.__name__           = "mgz2imgslices"
+        self.verbosity          = 1
+        self.dp                 = pfmisc.debug(    
+                                            verbosity   = self.verbosity,
+                                            within      = self.__name__
+                                            )
 
-            if len(self.str_inputDir):
-                self.str_inputFile  = '%s/%s' % (self.str_inputDir, self.str_inputFile)
-            if not len(self.str_inputDir):
-                self.str_inputDir = os.path.dirname(self.str_inputFile)
-            if not len(self.str_inputDir): self.str_inputDir = '.'
-            str_fileName, str_fileExtension  = os.path.splitext(self.str_outputFileStem)
-            if len(self.str_outputFileType):
-                str_fileExtension            = '.%s' % self.str_outputFileType
+        for key, value in kwargs.items():
+            if key == "inputFile":          self.str_inputFile          = value
+            if key == "inputDir":           self.str_inputDir           = value
+            if key == "outputDir":          self.str_outputDir          = value
+            if key == "outputFileStem":     self.str_outputFileStem     = value
+            if key == "outputFileType":     self.str_outputFileType     = value
+            if key == "label":              self.str_label              = value
+            if key == "normalize":          self._b_normalize           = value
+            if key == "lookuptable":        self.str_lookuptable        = value
+            if key == "skipLabelValueList": self.str_skipLabelValueList = value
+            if key == "wholeVolume":        self.str_wholeVolume        = value
 
-            if len(str_fileExtension) and not len(self.str_outputFileType):
-                self.str_outputFileType     = str_fileExtension
+        if len(self.str_inputDir):
+            self.str_inputFile  = '%s/%s' % (self.str_inputDir, self.str_inputFile)
+        if not len(self.str_inputDir):
+            self.str_inputDir = os.path.dirname(self.str_inputFile)
+        if not len(self.str_inputDir): self.str_inputDir = '.'
+        str_fileName, str_fileExtension  = os.path.splitext(self.str_outputFileStem)
+        if len(self.str_outputFileType):
+            str_fileExtension            = '.%s' % self.str_outputFileType
 
-            if not len(self.str_outputFileType) and not len(str_fileExtension):
-                self.str_outputFileType     = '.png'
+        if len(str_fileExtension) and not len(self.str_outputFileType):
+            self.str_outputFileType     = str_fileExtension
+
+        if not len(self.str_outputFileType) and not len(str_fileExtension):
+            self.str_outputFileType     = '.png'
 
     def tic(self):
         """
@@ -136,7 +170,7 @@ class mgz2imgslices(object):
                 # prevents lossy conversion
                 np_data=np_data.astype(np.uint8)
 
-                str_image_name = "%s/%s/%s-%00d.%s" % (self.str_outputDir, str_dirname, 
+                str_image_name = "%s/%s-%s/%s-%00d.%s" % (self.str_outputDir, self.str_label, str_dirname, 
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
                 self.dp.qprint("Saving %s" % str_image_name, level = 2)
                 imageio.imwrite(str_image_name, np_data)
@@ -155,17 +189,15 @@ class mgz2imgslices(object):
             # prevents lossy conversion
             np_data=np_data.astype(np.uint8)
 
-            str_image_name = "%s/%s/%s-%00d.%s" % (self.str_outputDir, str_whole_dirname, 
+            str_image_name = "%s/%s-%s/%s-%00d.%s" % (self.str_outputDir, self.str_label, str_whole_dirname, 
                 self.str_outputFileStem, current_slice, self.str_outputFileType)
             self.dp.qprint("Saving %s" % str_image_name, level = 2)
             imageio.imwrite(str_image_name, np_data)
 
-    def run(self, options):
+    def run(self):
         """
         Define the code to be run by this plugin app.
         """
-
-        self.initialize()
 
         if len(self.str_skipLabelValueList):
             self.l_skip         = self.str_skipLabelValueList.split(',')
@@ -188,7 +220,7 @@ class mgz2imgslices(object):
 
             self.dp.qprint("Processing %s.." % str_dirname, level = 1)
                 
-            os.mkdir("%s/%s" % (self.str_outputDir, str_dirname))
+            os.mkdir("%s/%s-%s" % (self.str_outputDir, self.str_label, str_dirname))
 
             self.nparray_to_imgs(np_mgz_vol, item)
 
