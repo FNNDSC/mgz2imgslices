@@ -9,6 +9,7 @@ import nibabel as nib
 import imageio
 import pandas as pd
 import re
+import time
 sys.path.append(os.path.dirname(__file__))
 import  pfmisc
 from    pfmisc._colors      import  Colors
@@ -68,11 +69,11 @@ class mgz2imgslices(object):
                 self.str_outputFileType     = '.png'
 
     def tic(self):
-    """
-        Port of the MatLAB function of same name
-    """
-    global Gtic_start
-    Gtic_start = time.time()
+        """
+            Port of the MatLAB function of same name
+        """
+        global Gtic_start
+        Gtic_start = time.time()
 
     def toc(self, *args, **kwargs):
         """
