@@ -22,7 +22,7 @@ class mgz2imgslices(object):
 
     """
 
-    def initialize(self):
+    def __init__(self, **kwargs):
 
             self.str_inputDir            = ""
             self.str_outputDir           = ""
@@ -40,6 +40,18 @@ class mgz2imgslices(object):
                                                 verbosity   = self.verbosity,
                                                 within      = self.__name__
                                                 )
+
+            for key, value in kwargs.items():
+                if key == "inputFile":          self.str_inputFile          = value
+                if key == "inputDir":           self.str_inputDir           = value
+                if key == "outputDir":          self.str_outputDir          = value
+                if key == "outputFileStem":     self.str_outputFileStem     = value
+                if key == "outputFileType":     self.str_outputFileType     = value
+                if key == "normalize":          self._b_normalize           = value
+                if key == "lookuptable":        self.str_lookuptable        = value
+                if key == "skipLabelValueList": self.str_skipLabelValueList = value
+                if key == "wholeVolume":        self.str_wholeVolume        = value
+
             if len(self.str_inputDir):
                 self.str_inputFile  = '%s/%s' % (self.str_inputDir, self.str_inputFile)
             if not len(self.str_inputDir):
@@ -55,6 +67,28 @@ class mgz2imgslices(object):
             if not len(self.str_outputFileType) and not len(str_fileExtension):
                 self.str_outputFileType     = '.png'
 
+    def tic(self):
+    """
+        Port of the MatLAB function of same name
+    """
+    global Gtic_start
+    Gtic_start = time.time()
+
+    def toc(self, *args, **kwargs):
+        """
+            Port of the MatLAB function of same name
+
+            Behaviour is controllable to some extent by the keyword
+            args:
+
+
+        """
+        global Gtic_start
+        f_elapsedTime = time.time() - Gtic_start
+        for key, value in kwargs.items():
+            if key == 'sysprint':   return value % f_elapsedTime
+            if key == 'default':    return "Elapsed time = %f seconds." % f_elapsedTime
+        return f_elapsedTime
 
     def readFSColorLUT(self, str_filename):
         l_column_names = ["#No", "LabelName"]
