@@ -178,7 +178,7 @@ class mgz2imgslices(object):
     def convert_whole_volume(self, np_mgz_vol):
         i_total_slices = np_mgz_vol.shape[0]
 
-        str_whole_dirname = self.str_wholeVolume
+        str_whole_dirname = self.str_label+"-"+self.str_wholeVolume
 
         os.mkdir("%s/%s" % (self.str_outputDir, str_whole_dirname))
 
@@ -189,7 +189,7 @@ class mgz2imgslices(object):
             # prevents lossy conversion
             np_data=np_data.astype(np.uint8)
 
-            str_image_name = "%s/%s-%s/%s-%00d.%s" % (self.str_outputDir, self.str_label, str_whole_dirname, 
+            str_image_name = "%s/%s/%s-%00d.%s" % (self.str_outputDir, str_whole_dirname, 
                 self.str_outputFileStem, current_slice, self.str_outputFileType)
             self.dp.qprint("Saving %s" % str_image_name, level = 2)
             imageio.imwrite(str_image_name, np_data)
