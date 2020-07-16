@@ -200,6 +200,11 @@ parser.add_argument('-w', '--wholeVolume',
                     dest='wholeVolume',
                     default = 'wholeVolume'
                     )
+parser.add_argument("--printElapsedTime",
+                    help    = "print program run time",
+                    dest    = 'printElapsedTime',
+                    action  = 'store_true',
+                    default = False)
 parser.add_argument("-x", "--man",
                     help    = "man",
                     dest    = 'man',
@@ -232,4 +237,14 @@ if args.man or args.synopsis:
         str_help = synopsis(True)
     print(str_help)
     sys.exit(1)
+
+# Create the object
+imgConverter    = mgz2imgslices.object_factoryCreate(args).C_convert
+
+# And now run it!
+imgConverter.tic()
+imgConverter.run()
+if args.printElapsedTime: print("Elapsed time = %f seconds" % imgConverter.toc())
+sys.exit(0)
+
 
