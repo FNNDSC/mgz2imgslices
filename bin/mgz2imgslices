@@ -160,7 +160,7 @@ def synopsis(ab_shortOnly=False):
 parser  = ArgumentParser(description = str_desc, formatter_class = RawTextHelpFormatter)
 
 parser.add_argument('-i', '--inputFile', 
-                    help='name of the input file within the inputDir'
+                    help='name of the input file within the inputDir',
                     dest='inputFile'
                     )
 parser.add_argument("-I", "--inputDir",
@@ -168,7 +168,7 @@ parser.add_argument("-I", "--inputDir",
                     dest    = 'inputDir',
                     default = '')
 parser.add_argument('-o', '--outputFileStem', 
-                    help='name of the output files within the outputDir'
+                    help='name of the output files within the outputDir',
                     dest='outputFileStem'
                     )
 parser.add_argument("-d", "--outputDir",
@@ -176,32 +176,32 @@ parser.add_argument("-d", "--outputDir",
                     dest    = 'outputDir',
                     default = '.')
 parser.add_argument('-t', '--outputFileType', 
-                    help='output image file format'
+                    help='output image file format',
                     dest='outputFileType',
                     default = 'png'
                     )
 parser.add_argument('--label', 
-                    help='prefix a label to all the label directories'
+                    help='prefix a label to all the label directories',
                     dest='label',
                     default = 'label'
                     )
 parser.add_argument('-n', '--normalize', 
-                    help='normalize the pixels of output image files'
+                    help='normalize the pixels of output image files',
                     dest='normalize',
                     default = False
                     )
 parser.add_argument('-l', '--lookuptable', 
-                    help='reads name for the Label directories'
+                    help='reads name for the Label directories',
                     dest='lookuptable',
                     default = '__val__'
                     )
 parser.add_argument('-s', '--skipLabelValueList', 
-                    help='Comma separated list of labels to skip'
+                    help='Comma separated list of labels to skip',
                     dest='skipLabelValueList',
                     default = ''
                     )
 parser.add_argument('-w', '--wholeVolume', 
-                    help='Converts entire mgz volume to png/jpg instead of individually masked labels'
+                    help='Converts entire mgz volume to png/jpg instead of individually masked labels',
                     dest='wholeVolume',
                     default = 'wholeVolume'
                     )
