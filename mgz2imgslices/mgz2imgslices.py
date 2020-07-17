@@ -61,10 +61,10 @@ class mgz2imgslices(object):
         self.str_outputDir           = ""
         self.str_inputFile           = ""
         self.str_outputFileStem      = ""
-        self.str_outputFileType      = ""
-        self.str_label               = ""
+        self.str_outputFileType      = "png"
+        self.str_label               = "label"
         self._b_normalize            = False
-        self.str_lookuptable         = ""
+        self.str_lookuptable         = "__val__"
         self.str_skipLabelValueList  = ""
         self.str_wholeVolume         = ""
         self.l_skip             = []
@@ -144,7 +144,7 @@ class mgz2imgslices(object):
         if self.str_lookuptable == "__val__":
             str_dirname = "00"+str(int(item))
         elif self.str_lookuptable == "__fs__":
-            df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imgslices/FreeSurferColorLUT.txt")
+            df_FSColorLUT = self.readFSColorLUT("../FreeSurferColorLUT.txt")
             str_dirname = df_FSColorLUT.loc[df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
         else:
             df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
@@ -202,7 +202,7 @@ class mgz2imgslices(object):
         if len(self.str_skipLabelValueList):
             self.l_skip         = self.str_skipLabelValueList.split(',')
 
-        mgz_vol = nib.load("%s/%s" % (self.str_inputDir, self.str_inputFile))
+        mgz_vol = nib.load("%s" % (self.str_inputFile))
 
         np_mgz_vol = mgz_vol.get_fdata()
         
@@ -218,7 +218,7 @@ class mgz2imgslices(object):
 
             str_dirname = self.lookup_table(item)
 
-            self.dp.qprint("Processing %s.." % str_dirname, level = 1)
+            self.dp.qprint("Processing %s-%s.." % (self.str_label, str_dirname), level = 1)
                 
             os.mkdir("%s/%s-%s" % (self.str_outputDir, self.str_label, str_dirname))
 
@@ -254,6 +254,7 @@ class object_factoryCreate:
             outputDir            = args.outputDir,
             outputFileStem       = args.outputFileStem,
             outputFileType       = args.outputFileType,
+            label                = args.label,
             normalize            = args.normalize,
             lookuptable          = args.lookuptable,
             skipLabelValueList   = args.skipLabelValueList,
