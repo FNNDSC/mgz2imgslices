@@ -49,3 +49,17 @@ Should you get an error about ``python3-tk`` not installed, simply do (for examp
 
         sudo apt-get update
         sudo apt-get install -y python3-tk
+
+Docker container
+~~~~~~~~~~~~~~~~
+
+We also offer a docker container of ``mgz2imgslices`` as a ChRIS-conformant platform plugin here https://github.com/FNNDSC/pl-mgz2imgslices -- please consult that page for information on running the dockerized container. The containerized version exposes a similar CLI and functionality as this module.
+
+How to Use
+----------
+
+``mgz2imgslices`` needs at a minimum the following required command line arguments:
+
+- ``-i | --inputFile <inputFile>`` : Input ``.mgz`` file to convert
+
+- ``-d | --outputDir <outputDir> :`` The directory to contain the converted output label directories containing image slices
