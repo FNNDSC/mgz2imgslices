@@ -63,3 +63,116 @@ How to Use
 - ``-i | --inputFile <inputFile>`` : Input ``.mgz`` file to convert
 
 - ``-d | --outputDir <outputDir> :`` The directory to contain the converted output label directories containing image slices
+
+Examples
+--------
+
+First, let's create a directory, say ``devel`` wherever you feel like it. We will place some test data in this directory to process with this plugin.
+
+.. code:: bash
+
+    cd ~/
+    mkdir devel
+    cd devel
+    export DEVEL=$(pwd)
+
+Now, we need to fetch sample MGZ data. 
+
+Pull MGZ data
+~~~~~~~~~~~~~
+
+- We provide a sample directory of a few ``.mgz`` volumes here. (https://github.com/FNNDSC/mgz_converter_dataset.git)
+
+- Clone this repository (``mgz_converter_dataset``) to your local computer.
+
+.. code:: bash
+
+    git clone https://github.com/FNNDSC/mgz_converter_dataset.git
+
+Make sure the ``mgz_converter_dataset`` directory is placed in the devel directory.
+
+- Make sure your current working directory is ``devel``. At this juncture it should contain `mgz_converter_dataset``.
+
+- Create an output directory named ``results`` in ``devel``.
+
+.. code:: bash
+
+    mkdir results && chmod 777 results
+
+- Now run ``mgz2imgslices`` using the following command. Change the arguments according to your need. 
+
+.. code:: bash
+
+    mgz2imgslices                                                          \
+        -inputFile ${DEVEL}/mgz_converter_dataset/100307/aparc.a2009s+aseg.mgz \
+        --outputDir ${DEVEL}/results/                                          \ 
+        --outputFileStem sample                                                \
+        --outputFileType jpg                                                   \
+        --label img                                                            \         
+        --wholeVolume FullVolume                                               \
+        --lookuptable __val__                                                   \
+        --skipLabelValueList 0,4,7                                              
+
+Command Line Arguments
+----------------------
+
+::
+
+    ARGS
+
+        [-i] [--inputFile] <inputFile>
+        Input file to convert. Should be a .mgz file
+
+        [-o] [--outputFileStem] <outputFileStem>
+        The output file stem to store conversion. If this is specified
+        with an extension, this extension will be used to specify the
+        output file type.
+
+        [-t] [--outputFileType] <outputFileType>
+        The output file type. If different to <outputFileStem> extension,
+        will override extension in favour of <outputFileType>. Should be a 'png' or 'jpg'
+
+        [--label] <prefixForLabelDirectories>
+        Adds a prefix to each Label directory name
+
+        [-n] [--normalize]
+        If specified, will normalize the output image pixels to 0 and 1 values.
+
+        [-l] [--lookuptable] <LUTcolumnToNameDirectories>
+        Specifies if the label directories that are created should be named 
+        according to Label Number or Label Name. 
+        Can be wither "__val__", "__fs__"(uses the built in FreeSurferColorLUT.txt) 
+        or <LUTFilename.txt> provided by user from the inputdir
+        Default is "__val__" which is Label Numbers
+
+        [-s] [--skipLabelValueList] <ListOfLabelNumbersToSkip>
+        If specified as a comma separated string of label numbers,
+        will not create directories of those label numbers.
+
+        [-w] [--wholeVolume]
+        If specified, creates a diretory called "WholeVolume" (within the outputdir) 
+        containing PNG/JPG files including all labels.
+
+        [-h] [--help]
+        If specified, show help message and exit.
+        
+        [--json]
+        If specified, show json representation of app and exit.
+        
+        [--man]
+        If specified, print (this) man page and exit.
+
+        [--meta]
+        If specified, print plugin meta np_data and exit.
+        
+        [--savejson <DIR>] 
+        If specified, save json representation file to DIR and exit. 
+        
+        [-v <level>] [--verbosity <level>]
+        Verbosity level for app. Not used currently.
+        
+        [--version]
+        If specified, print version number and exit. 
+
+        [-y] [--synopsis]
+        Show short synopsis.
