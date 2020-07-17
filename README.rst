@@ -1,5 +1,5 @@
-mgz2imgslices 1.0
-=================
+mgz2imgslices 1.0.0
+===================
 
 Quick Overview
 --------------
