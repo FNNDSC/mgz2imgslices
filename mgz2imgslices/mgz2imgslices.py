@@ -170,7 +170,9 @@ class mgz2imgslices(object):
                 # prevents lossy conversion
                 np_data=np_data.astype(np.uint8)
 
-                str_image_name = "%s/%s-%s/%s-%00d.%s" % (self.str_outputDir, self.str_label, str_dirname, 
+                current_slice = "00"+str(current_slice)
+
+                str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname, 
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
                 self.dp.qprint("Saving %s" % str_image_name, level = 2)
                 imageio.imwrite(str_image_name, np_data)
@@ -189,7 +191,9 @@ class mgz2imgslices(object):
             # prevents lossy conversion
             np_data=np_data.astype(np.uint8)
 
-            str_image_name = "%s/%s/%s-%00d.%s" % (self.str_outputDir, str_whole_dirname, 
+            current_slice = "00"+str(current_slice)
+            
+            str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname, 
                 self.str_outputFileStem, current_slice, self.str_outputFileType)
             self.dp.qprint("Saving %s" % str_image_name, level = 2)
             imageio.imwrite(str_image_name, np_data)
