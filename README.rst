@@ -105,14 +105,15 @@ Make sure the ``mgz_converter_dataset`` directory is placed in the devel directo
 
 .. code:: bash
 
-    mgz2imgslices                                                          \
-        -inputFile ${DEVEL}/mgz_converter_dataset/100307/aparc.a2009s+aseg.mgz \
+    mgz2imgslices  
+        -I ${DEVEL}/mgz_converter_dataset/100307/                              \
+        -inputFile aparc.a2009s+aseg.mgz                                       \
         --outputDir ${DEVEL}/results/                                          \ 
         --outputFileStem sample                                                \
         --outputFileType jpg                                                   \
-        --label label                                                           \         
+        --label label                                                          \         
         --wholeVolume FullVolume                                               \
-        --lookuptable __val__                                                   \
+        --lookuptable __val__                                                  \
         --skipLabelValueList 0,4,7                                              
 
 The above command shall create the following directories and files within the ``results`` directory similar to the following structure:
@@ -129,6 +130,41 @@ The above command shall create the following directories and files within the ``
     ...
     results/label-0012175/sample-00255.jpg
 
+
+**EXAMPLE-2**
+
+- This example uses the "FreeSurferColorLUT.txt" file to name the label directories instead of numerical values.
+
+- Make sure that your LUT.txt file is present in the ``([-I] [--inputDir])`` (in this case: ``${DEVEL}/mgz_converter_dataset/100307/``) and follows the format of the ``FreeSurferColorLUT.txt`` file. (https://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/AnatomicalROI/FreeSurferColorLUT)
+
+- Run ``mgz2imgslices`` using the following command. Change the arguments according to your need. 
+
+.. code:: bash
+
+   mgz2imgslices  
+        -I ${DEVEL}/mgz_converter_dataset/100307/                              \
+        -inputFile aparc.a2009s+aseg.mgz                                       \
+        --outputDir ${DEVEL}/results/                                          \ 
+        --outputFileStem sample                                                \
+        --outputFileType jpg                                                   \
+        --label label                                                          \         
+        --wholeVolume FullVolume                                               \
+        --lookuptable FreeSurferColorLUT.txt                                                  \
+        --skipLabelValueList 0,4,7                                               
+
+The above command will create resultant directories named after the ``Label Names`` within the ``results`` directory as shown below:
+
+.. code:: bash
+
+    results/label-Left-Cerebral-White-Matter/sample-000.jpg
+    ...
+    results/label-Left-Cerebral-White-Matter/sample-00255.jpg
+
+    ......
+
+    results/label-ctx_rh_S_temporal_transverse/sample-000.jpg
+    ...
+    results/label-ctx_rh_S_temporal_transverse/sample-00255.jpg
 
 
 Command Line Arguments
