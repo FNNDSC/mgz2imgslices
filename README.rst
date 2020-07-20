@@ -99,7 +99,9 @@ Make sure the ``mgz_converter_dataset`` directory is placed in the devel directo
 
     mkdir results && chmod 777 results
 
-- Now run ``mgz2imgslices`` using the following command. Change the arguments according to your need. 
+**EXAMPLE-1**
+
+- Run ``mgz2imgslices`` using the following command. Change the arguments according to your need. 
 
 .. code:: bash
 
@@ -108,10 +110,26 @@ Make sure the ``mgz_converter_dataset`` directory is placed in the devel directo
         --outputDir ${DEVEL}/results/                                          \ 
         --outputFileStem sample                                                \
         --outputFileType jpg                                                   \
-        --label img                                                            \         
+        --label label                                                           \         
         --wholeVolume FullVolume                                               \
         --lookuptable __val__                                                   \
         --skipLabelValueList 0,4,7                                              
+
+The above command shall create the following directories and files within the ``results`` directory similar to the following structure:
+
+.. code:: bash
+
+    results/label-002/sample-000.jpg
+    ...
+    results/label-002/sample-00255.jpg
+
+    ......
+
+    results/label-0012175/sample-000.jpg
+    ...
+    results/label-0012175/sample-00255.jpg
+
+
 
 Command Line Arguments
 ----------------------
@@ -121,7 +139,7 @@ Command Line Arguments
     ARGS
 
         [-i] [--inputFile] <inputFile>
-        Input file to convert. Should be a .mgz file
+        Input file to convert. Should be a .mgz file.
 
         [-o] [--outputFileStem] <outputFileStem>
         The output file stem to store conversion. If this is specified
@@ -130,10 +148,10 @@ Command Line Arguments
 
         [-t] [--outputFileType] <outputFileType>
         The output file type. If different to <outputFileStem> extension,
-        will override extension in favour of <outputFileType>. Should be a 'png' or 'jpg'
+        will override extension in favour of <outputFileType>. Should be a 'png' or 'jpg'.
 
         [--label] <prefixForLabelDirectories>
-        Adds a prefix to each Label directory name
+        Adds a prefix to each Label directory name.
 
         [-n] [--normalize]
         If specified, will normalize the output image pixels to 0 and 1 values.
@@ -142,7 +160,7 @@ Command Line Arguments
         Specifies if the label directories that are created should be named 
         according to Label Number or Label Name. 
         Can be wither "__val__" or <LUTFilename.txt> provided by user from the inputdir
-        Default is "__val__" which is Label Numbers
+        Default is "__val__" which is Label Numbers.
 
         [-s] [--skipLabelValueList] <ListOfLabelNumbersToSkip>
         If specified as a comma separated string of label numbers,
