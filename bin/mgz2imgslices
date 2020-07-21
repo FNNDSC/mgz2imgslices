@@ -67,7 +67,7 @@ def synopsis(ab_shortOnly=False):
             [-n|--normalize]                                            \\
             [-l|--lookuptable <LUTfile>]                                \\
             [-s|--skipLabelValueList <ListOfVoxelValuesToSkip>]         \\
-            [-f|--filterLabelValues <ListOfVoxelValuesToInclude>]       \\
+            [-f|--filterLabelValueList <ListOfVoxelValuesToInclude>]       \\
             [-w|--wholeVolume <wholeVolDirName>]                        \\
             [-h|--help]                                                 \\
             [--json]                                                    \\
@@ -139,7 +139,7 @@ def synopsis(ab_shortOnly=False):
         the original input volume.
 
         [-l|--lookuptable <LUTfile>]
-        If passed, perform a looktup on the filtered voxel label values
+        If passed, perform a lookup on the filtered voxel label values
         according to the contents of the <LUTfile>. This <LUTfile> should
         conform to the FreeSurfer lookup table format (documented elsewhere).
 
@@ -154,12 +154,12 @@ def synopsis(ab_shortOnly=False):
         If specified as a comma separated string of label numbers,
         will not create directories of those label numbers.
 
-        [-f|--filterLabelValues <ListOfVoxelValuesToInclude>]
+        [-f|--filterLabelValueList <ListOfVoxelValuesToInclude>]
         The logical inverse of the [skipLabelValueList] flag. If specified,
         only filter the comma separated list of passed voxel values from the
         input volume.
 
-        The detault value of "-1" implies all voxel values should be filtered.
+        The default value of "-1" implies all voxel values should be filtered.
 
         [-w|--wholeVolume <wholeVolDirName>]
         If specified, creates a diretory called <wholeVolDirName> (within the
@@ -253,7 +253,7 @@ parser.add_argument('-s', '--skipLabelValueList',
 parser.add_argument('-f', '--filterLabelValueList',
                     help='Comma separated list of voxel values to include',
                     dest='filterLabelValueList',
-                    default = '-1'
+                    default = ''
                     )
 parser.add_argument('-w', '--wholeVolume',
                     help='Converts entire mgz volume to png/jpg instead of individually masked labels',
