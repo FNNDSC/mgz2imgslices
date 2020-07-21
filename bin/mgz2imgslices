@@ -22,7 +22,7 @@ from    pfmisc._colors      import Colors
 import  pudb
 
 
-str_version = "1.0.4"
+str_version = "1.0.6"
 
 str_desc    = Colors.CYAN + """
 
@@ -35,7 +35,7 @@ str_desc    = Colors.CYAN + """
             __/ |                        __/ |
            |___/                        |___/
 
-    Filters mgz volume files by voxel value to well organized 
+    Filters mgz volume files by voxel value to well organized
     directories of image files.
 
                     -- version """ + \
@@ -144,10 +144,10 @@ def synopsis(ab_shortOnly=False):
         conform to the FreeSurfer lookup table format (documented elsewhere).
 
         Note that the special <LUTfile> string ``__val__`` can be passed which
-        effectively means "no <LUTfile>". In this case, the numerical voxel 
-        values are used for output directory names. This special string is 
+        effectively means "no <LUTfile>". In this case, the numerical voxel
+        values are used for output directory names. This special string is
         really only useful for scripted cases of running this application when
-        modifying the CLI is more complex than simply setting the <LUTfile> to 
+        modifying the CLI is more complex than simply setting the <LUTfile> to
         ``__val__``.
 
         [-s|--skipLabelValueList] <ListOfLabelNumbersToSkip>
@@ -155,7 +155,7 @@ def synopsis(ab_shortOnly=False):
         will not create directories of those label numbers.
 
         [-f|--filterLabelValues <ListOfVoxelValuesToInclude>]
-        The logical inverse of the [skipLabelValueList] flag. If specified, 
+        The logical inverse of the [skipLabelValueList] flag. If specified,
         only filter the comma separated list of passed voxel values from the
         input volume.
 

@@ -12,7 +12,7 @@ def readme():
 
 setup(
       name             =   'mgz2imgslices',
-      version          =   '1.0.4',
+      version          =   '1.0.6',
       description      =   '(Python) utility to convert mgz volumes to jpg and png',
       long_description =   readme(),
       author           =   'FNNDSC',

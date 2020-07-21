@@ -71,7 +71,7 @@ class mgz2imgslices(object):
         self.l_skip                     = []
         self.__name__                   = "mgz2imgslices"
         self.verbosity                  = 1
-        self.dp                         = pfmisc.debug(    
+        self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
                                             )
@@ -139,7 +139,7 @@ class mgz2imgslices(object):
                     l_line = line.split(' ')
                     l_labels = l_line[:2]
                     df_FSColorLUT.loc[len(df_FSColorLUT)] = l_labels
-            
+
         return df_FSColorLUT
 
     def lookup_table(self, item):
@@ -152,7 +152,7 @@ class mgz2imgslices(object):
             df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
             str_dirname = df_FSColorLUT.loc[df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
 
-        return str_dirname    
+        return str_dirname
 
     def nparray_to_imgs(self, np_mgz_vol, item):
         #mask voxels other than the current label to 0 values
@@ -160,7 +160,7 @@ class mgz2imgslices(object):
                 np_single_label = np.where(np_mgz_vol!=item, 0, 1)
             else:
                 np_single_label = np.where(np_mgz_vol!=item, 0, item)
-            
+
             i_total_slices = np_single_label.shape[0]
 
             str_dirname = self.lookup_table(item)
@@ -168,13 +168,13 @@ class mgz2imgslices(object):
             # iterate through slices
             for current_slice in range(0, i_total_slices):
                 np_data = np_single_label[:, :, current_slice]
-                
+
                 # prevents lossy conversion
                 np_data=np_data.astype(np.uint8)
 
                 current_slice = "00"+str(current_slice)
 
-                str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname, 
+                str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
                 self.dp.qprint("Saving %s" % str_image_name, level = 2)
                 imageio.imwrite(str_image_name, np_data)
@@ -189,13 +189,13 @@ class mgz2imgslices(object):
         # iterate through slices
         for current_slice in range(0, i_total_slices):
             np_data = np_mgz_vol[:, :, current_slice]
-            
+
             # prevents lossy conversion
             np_data=np_data.astype(np.uint8)
 
             current_slice = "00"+str(current_slice)
-            
-            str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname, 
+
+            str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
                 self.str_outputFileStem, current_slice, self.str_outputFileType)
             self.dp.qprint("Saving %s" % str_image_name, level = 2)
             imageio.imwrite(str_image_name, np_data)
@@ -211,7 +211,7 @@ class mgz2imgslices(object):
         mgz_vol = nib.load("%s" % (self.str_inputFile))
 
         np_mgz_vol = mgz_vol.get_fdata()
-        
+
         unique, counts = np.unique(np_mgz_vol, return_counts=True)
         labels = dict(zip(unique, counts))
 
@@ -219,13 +219,13 @@ class mgz2imgslices(object):
             self.convert_whole_volume(np_mgz_vol)
 
         for item in labels:
-            if str(int(item)) in self.l_skip: 
+            if str(int(item)) in self.l_skip:
                 continue
 
             str_dirname = self.lookup_table(item)
 
             self.dp.qprint("Processing %s-%s.." % (self.str_label, str_dirname), level = 1)
-                
+
             os.mkdir("%s/%s-%s" % (self.str_outputDir, self.str_label, str_dirname))
 
             self.nparray_to_imgs(np_mgz_vol, item)

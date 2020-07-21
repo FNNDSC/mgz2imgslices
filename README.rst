@@ -1,10 +1,10 @@
-mgz2imgslices 1.0.4
+mgz2imgslices 1.0.6
 ===================
 
 Quick Overview
 --------------
 
--  Convert ``.mgz`` inputs to ``jpg`` or ``png`` outputs.
+-   Filters mgz volume files by voxel value to well organized directories of image files.
 
 Overview
 --------
