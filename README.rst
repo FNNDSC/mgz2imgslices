@@ -225,8 +225,8 @@ Command Line Arguments
 
         The detault value of "-1" implies all voxel values should be filtered.
 
-        [-w|--wholeVolume]
-        If specified, creates a diretory called "WholeVolume" (within the
+        [-w|--wholeVolume <wholeVolDirName>]
+        If specified, creates a diretory called <wholeVolDirName> (within the
         outputdir) containing PNG/JPG images files of the entire input.
 
         This effectively really creates a PNG/JPG conversion of the input
