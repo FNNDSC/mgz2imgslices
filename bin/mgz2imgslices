@@ -253,7 +253,7 @@ parser.add_argument('-s', '--skipLabelValueList',
 parser.add_argument('-f', '--filterLabelValueList',
                     help='Comma separated list of voxel values to include',
                     dest='filterLabelValueList',
-                    default = ''
+                    default = "-1"
                     )
 parser.add_argument('-w', '--wholeVolume',
                     help='Converts entire mgz volume to png/jpg instead of individually masked labels',
