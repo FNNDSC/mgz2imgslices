@@ -69,6 +69,7 @@ class mgz2imgslices(object):
         self.str_filterLabelValueList   = "-1"
         self.str_wholeVolume            = ""
         self.l_skip                     = []
+        self.l_filter                   = []
         self.__name__                   = "mgz2imgslices"
         self.verbosity                  = 1
         self.dp                         = pfmisc.debug(
@@ -208,6 +209,9 @@ class mgz2imgslices(object):
         if len(self.str_skipLabelValueList):
             self.l_skip         = self.str_skipLabelValueList.split(',')
 
+        if len(self.str_filterLabelValueList):
+            self.l_filter       = self.str_filterLabelValueList.split(',')
+
         mgz_vol = nib.load("%s" % (self.str_inputFile))
 
         np_mgz_vol = mgz_vol.get_fdata()
@@ -219,7 +223,13 @@ class mgz2imgslices(object):
             self.convert_whole_volume(np_mgz_vol)
 
         for item in labels:
+            
+            # print(self.str_filterLabelValueList)
+
             if str(int(item)) in self.l_skip:
+                continue
+            
+            if self.str_filterLabelValueList != "-1" and str(int(item)) not in self.l_filter:
                 continue
 
             str_dirname = self.lookup_table(item)
@@ -229,6 +239,7 @@ class mgz2imgslices(object):
             os.mkdir("%s/%s-%s" % (self.str_outputDir, self.str_label, str_dirname))
 
             self.nparray_to_imgs(np_mgz_vol, item)
+
 
 class object_factoryCreate:
     """
