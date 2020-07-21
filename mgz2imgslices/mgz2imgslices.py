@@ -54,38 +54,40 @@ class mgz2imgslices(object):
 
     def __init__(self, **kwargs):
 
-        self.str_desc                = ""
-        self.__name__                = "mgz2imgslices"
+        self.str_desc                   = ""
+        self.__name__                   = "mgz2imgslices"
 
-        self.str_inputDir            = ""
-        self.str_outputDir           = ""
-        self.str_inputFile           = ""
-        self.str_outputFileStem      = ""
-        self.str_outputFileType      = "png"
-        self.str_label               = "label"
-        self._b_normalize            = False
-        self.str_lookuptable         = "__val__"
-        self.str_skipLabelValueList  = ""
-        self.str_wholeVolume         = ""
-        self.l_skip             = []
-        self.__name__           = "mgz2imgslices"
-        self.verbosity          = 1
-        self.dp                 = pfmisc.debug(    
+        self.str_inputDir               = ""
+        self.str_outputDir              = ""
+        self.str_inputFile              = ""
+        self.str_outputFileStem         = ""
+        self.str_outputFileType         = "png"
+        self.str_label                  = "label"
+        self._b_normalize               = False
+        self.str_lookuptable            = "__val__"
+        self.str_skipLabelValueList     = ""
+        self.str_filterLabelValueList   = "-1"
+        self.str_wholeVolume            = ""
+        self.l_skip                     = []
+        self.__name__                   = "mgz2imgslices"
+        self.verbosity                  = 1
+        self.dp                         = pfmisc.debug(    
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
                                             )
 
         for key, value in kwargs.items():
-            if key == "inputFile":          self.str_inputFile          = value
-            if key == "inputDir":           self.str_inputDir           = value
-            if key == "outputDir":          self.str_outputDir          = value
-            if key == "outputFileStem":     self.str_outputFileStem     = value
-            if key == "outputFileType":     self.str_outputFileType     = value
-            if key == "label":              self.str_label              = value
-            if key == "normalize":          self._b_normalize           = value
-            if key == "lookuptable":        self.str_lookuptable        = value
-            if key == "skipLabelValueList": self.str_skipLabelValueList = value
-            if key == "wholeVolume":        self.str_wholeVolume        = value
+            if key == "inputFile":              self.str_inputFile          = value
+            if key == "inputDir":               self.str_inputDir           = value
+            if key == "outputDir":              self.str_outputDir          = value
+            if key == "outputFileStem":         self.str_outputFileStem     = value
+            if key == "outputFileType":         self.str_outputFileType     = value
+            if key == "label":                  self.str_label              = value
+            if key == "normalize":              self._b_normalize           = value
+            if key == "lookuptable":            self.str_lookuptable        = value
+            if key == "skipLabelValueList":     self.str_skipLabelValueList = value
+            if key == "filterLabelValueList":   self.str_filterLabelValueList = value
+            if key == "wholeVolume":            self.str_wholeVolume        = value
 
         if len(self.str_inputDir):
             self.str_inputFile  = '%s/%s' % (self.str_inputDir, self.str_inputFile)
@@ -262,6 +264,7 @@ class object_factoryCreate:
             normalize            = args.normalize,
             lookuptable          = args.lookuptable,
             skipLabelValueList   = args.skipLabelValueList,
+            filterLabelValueList = args.filterLabelValueList,
             wholeVolume          = args.wholeVolume
         )
 

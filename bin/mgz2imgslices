@@ -22,26 +22,28 @@ from    pfmisc._colors      import Colors
 import  pudb
 
 
-str_version = "1.0.3"
+str_version = "1.0.4"
 
 str_desc    = Colors.CYAN + """
 
-                      _____ _                     _ _               
-                     / __  (_)                   | (_)              
- _ __ ___   __ _ ____`' / /'_ _ __ ___   __ _ ___| |_  ___ ___  ___ 
+                      _____ _                     _ _
+                     / __  (_)                   | (_)
+ _ __ ___   __ _ ____`' / /'_ _ __ ___   __ _ ___| |_  ___ ___  ___
 | '_ ` _ \ / _` |_  /  / / | | '_ ` _ \ / _` / __| | |/ __/ _ \/ __|
 | | | | | | (_| |/ / ./ /__| | | | | | | (_| \__ \ | | (_|  __/\__ \\
 |_| |_| |_|\__, /___|\_____/_|_| |_| |_|\__, |___/_|_|\___\___||___/
-            __/ |                        __/ |                      
-           |___/                        |___/                       
+            __/ |                        __/ |
+           |___/                        |___/
 
-            Converts mgz formats to jpg/png
+    Filters mgz volume files by voxel value to well organized 
+    directories of image files.
 
                     -- version """ + \
            Colors.YELLOW + str_version + Colors.CYAN + """ --
 
-    'mgz2imgslices' converts .mgz files to more web-friendly formats such as
-    png and jpg.
+    'mgz2imgslices' filters .mgz files to more web-friendly formats such as
+    png and jpg, and organizes these images in group-directories, each of
+    which filtered to one value in the original input.
 
 """ + Colors.NO_COLOUR
 
@@ -51,37 +53,36 @@ def synopsis(ab_shortOnly=False):
 
     NAME
 
-       mgz2imgslices.py 
+       mgz2imgslices
 
     SYNOPSIS
 
-        python mgz2imgslices.py                                         \\
-            [-i] [--inputFile] <inputFile>                              \\
-            [-o] [--outputFileStem] <outputFileStem>                    \\
-            [-t] [--outputFileType] <outputFileType>                    \\
-            [--label] <prefixForLabelDirectories>                       \\
-            [-n] [--normalize]                                          \\
-            [-l] [--lookuptable] <LUTcolumnToNameDirectories>           \\
-            [-s] [--skipLabelValueList] <ListOfLabelNumbersToSkip>      \\ 
-            [-w] [--wholeVolume]                                        \\        
-            [-h] [--help]                                               \\
+        python mgz2imgslices                                            \\
+            -i|--inputFile <inputFile>                                  \\
+            -d|--outputDir <outputDir>                                  \\
+            [-I|--inputDir <inputDir>]                                  \\
+            [-o|--outputFileStem]<outputFileStem>]                      \\
+            [-t|--outputFileType <outputFileType>]                      \\
+            [--label <prefixForLabelDirectories>]                       \\
+            [-n|--normalize]                                            \\
+            [-l|--lookuptable <LUTfile>]                                \\
+            [-s|--skipLabelValueList <ListOfVoxelValuesToSkip>]         \\
+            [-f|--filterLabelValues <ListOfVoxelValuesToInclude>]       \\
+            [-w|--wholeVolume]                                          \\
+            [-h|--help]                                                 \\
             [--json]                                                    \\
             [--man]                                                     \\
             [--meta]                                                    \\
             [--savejson <DIR>]                                          \\
-            [-v <level>] [--verbosity <level>]                          \\
+            [-v|--verbosity <level>]                                    \\
             [--version]                                                 \\
-            [-y] [--synopsis]                                           \\
-            <inputDir>                                                  \\
-            <outputDir> 
+            [-y|--synopsis]
 
     BRIEF EXAMPLE
 
         * Bare bones execution
 
-            mkdir in out && chmod 777 out
-            python mgz2imgslices.py   \\
-                                in    out
+            mgz2imgslices -i aparc+aseg.mgz -d /tmp/filtered
 
     ''' % scriptName
 
@@ -89,65 +90,110 @@ def synopsis(ab_shortOnly=False):
 
     DESCRIPTION
 
-        `mgz2imgslices.py` ...
+        ``mgz2imgslices`` is a simple Python utility that filters "labels"
+        from ``mgz`` volume files and saves each label set as slices of
+        (by default) ``png`` files, organized into a series of directories,
+        one per label set.
+
+        An ``mgz`` format file simply contains a 3D volume data structure of
+        image values. Often these values are interpreted to be image
+        intensities. Sometimes, however, they can be interpreted as label
+        identifiers. Regardless of the interpretation, the volume image data
+        is simply a number value in each voxel of the volume.
+
+        This script will scan across the input ``mgz`` volume, and for each
+        voxel value create a new output directory. In that directory will be
+        a set of (typically) ``png`` images, one per slice of the original
+        volume. These images will only contain the voxels in the original
+        dataset that all had that particular voxel value.
+
+        In this manner, ``mgz2imgslices`` can also be thought of as a dynamic
+        filter of an ``mgz`` volume file that filters each voxel value into
+        its own output directory of ``png`` image files.
 
     ARGS
 
-        [-i] [--inputFile] <inputFile>
+        [-i|--inputFile  <inputFile>]
         Input file to convert. Should be a .mgz file
 
-        [-o] [--outputFileStem] <outputFileStem>
+        [-o|--outputFileStem <outputFileStem>]
         The output file stem to store conversion. If this is specified
         with an extension, this extension will be used to specify the
         output file type.
 
-        [-t] [--outputFileType] <outputFileType>
+        [-t|--outputFileType <outputFileType>]
         The output file type. If different to <outputFileStem> extension,
-        will override extension in favour of <outputFileType>. Should be a 'png' or 'jpg'
+        will override extension in favour of <outputFileType>.
 
-        [--label] <prefixForLabelDirectories>
-        Adds a prefix to each Label directory name
+        Should be a ``png`` or ``jpg``.
 
-        [-n] [--normalize]
-        If specified, will normalize the output image pixels to 0 and 1 values.
+        [--label <prefixForLabelDirectories>]
+        Adds the string <prefixForLabelDirectories> to each filtered directory
+        name. This is mostly for possible downstream processing, allowing a
+        subsequent operation to easily determine which of the output directories
+        correspond to labels.
 
-        [-l] [--lookuptable] <LUTcolumnToNameDirectories>
-        Specifies if the label directories that are created should be named 
-        according to Label Number or Label Name. 
-        Can be wither "__val__", "__fs__"(uses the built in FreeSurferColorLUT.txt) 
-        or <LUTFilename.txt> provided by user from the inputdir
-        Default is "__val__" which is Label Numbers
+        [-n|--normalize]
+        If specified, will normalize the output image pixel values to
+        0 and 1, otherwise pixel image values will retain the value in
+        the original input volume.
 
-        [-s] [--skipLabelValueList] <ListOfLabelNumbersToSkip>
+        [-l|--lookuptable <LUTfile>]
+        If passed, perform a looktup on the filtered voxel label values
+        according to the contents of the <LUTfile>. This <LUTfile> should
+        conform to the FreeSurfer lookup table format (documented elsewhere).
+
+        Note that the special <LUTfile> string ``__val__`` can be passed which
+        effectively means "no <LUTfile>". In this case, the numerical voxel 
+        values are used for output directory names. This special string is 
+        really only useful for scripted cases of running this application when
+        modifying the CLI is more complex than simply setting the <LUTfile> to 
+        ``__val__``.
+
+        [-s|--skipLabelValueList] <ListOfLabelNumbersToSkip>
         If specified as a comma separated string of label numbers,
         will not create directories of those label numbers.
 
-        [-w] [--wholeVolume]
-        If specified, creates a diretory called "WholeVolume" (within the outputdir) 
-        containing PNG/JPG files including all labels.
+        [-f|--filterLabelValues <ListOfVoxelValuesToInclude>]
+        The logical inverse of the [skipLabelValueList] flag. If specified, 
+        only filter the comma separated list of passed voxel values from the
+        input volume.
 
-        [-h] [--help]
+        The detault value of "-1" implies all voxel values should be filtered.
+
+        [-w|--wholeVolume]
+        If specified, creates a diretory called "WholeVolume" (within the
+        outputdir) containing PNG/JPG images files of the entire input.
+
+        This effectively really creates a PNG/JPG conversion of the input
+        mgz file.
+
+        Values in the image files will be the same as the original voxel
+        values in the ``mgz``, unless the [--normalize] flag is specified
+        in which case this creates a single-value mask of the input image.
+
+        [-h|--help]
         If specified, show help message and exit.
-        
+
         [--json]
         If specified, show json representation of app and exit.
-        
+
         [--man]
         If specified, print (this) man page and exit.
 
         [--meta]
         If specified, print plugin meta np_data and exit.
-        
-        [--savejson <DIR>] 
-        If specified, save json representation file to DIR and exit. 
-        
-        [-v <level>] [--verbosity <level>]
-        Verbosity level for app. Not used currently.
-        
-        [--version]
-        If specified, print version number and exit. 
 
-        [-y] [--synopsis]
+        [--savejson <DIR>]
+        If specified, save json representation file to DIR and exit.
+
+        [-v <level>|--verbosity <level>]
+        Verbosity level for app. Not used currently.
+
+        [--version]
+        If specified, print version number and exit.
+
+        [-y|--synopsis]
         Show short synopsis.
 
     GITHUB
@@ -163,7 +209,7 @@ def synopsis(ab_shortOnly=False):
 #define script arguments
 parser  = ArgumentParser(description = str_desc, formatter_class = RawTextHelpFormatter)
 
-parser.add_argument('-i', '--inputFile', 
+parser.add_argument('-i', '--inputFile',
                     help='name of the input file within the inputDir',
                     dest='inputFile'
                     )
@@ -171,7 +217,7 @@ parser.add_argument("-I", "--inputDir",
                     help    = "input directory",
                     dest    = 'inputDir',
                     default = '')
-parser.add_argument('-o', '--outputFileStem', 
+parser.add_argument('-o', '--outputFileStem',
                     help='name of the output files within the outputDir',
                     dest='outputFileStem'
                     )
@@ -179,32 +225,37 @@ parser.add_argument("-d", "--outputDir",
                     help    = "output image directory",
                     dest    = 'outputDir',
                     default = '.')
-parser.add_argument('-t', '--outputFileType', 
+parser.add_argument('-t', '--outputFileType',
                     help='output image file format',
                     dest='outputFileType',
                     default = 'png'
                     )
-parser.add_argument('--label', 
+parser.add_argument('--label',
                     help='prefix a label to all the label directories',
                     dest='label',
                     default = 'label'
                     )
-parser.add_argument('-n', '--normalize', 
+parser.add_argument('-n', '--normalize',
                     help='normalize the pixels of output image files',
                     dest='normalize',
                     default = False
                     )
-parser.add_argument('-l', '--lookuptable', 
-                    help='reads name for the Label directories',
+parser.add_argument('-l', '--lookuptable',
+                    help='file contain text string lookups for voxel values',
                     dest='lookuptable',
                     default = '__val__'
                     )
-parser.add_argument('-s', '--skipLabelValueList', 
-                    help='Comma separated list of labels to skip',
+parser.add_argument('-s', '--skipLabelValueList',
+                    help='Comma separated list of voxel values to skip',
                     dest='skipLabelValueList',
                     default = ''
                     )
-parser.add_argument('-w', '--wholeVolume', 
+parser.add_argument('-f', '--filterLabelValueList',
+                    help='Comma separated list of voxel values to include',
+                    dest='filterLabelValueList',
+                    default = '-1'
+                    )
+parser.add_argument('-w', '--wholeVolume',
                     help='Converts entire mgz volume to png/jpg instead of individually masked labels',
                     dest='wholeVolume',
                     default = 'wholeVolume'
