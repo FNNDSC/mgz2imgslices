@@ -181,7 +181,7 @@ Command Line Arguments
         Input file to convert. Should be an ``mgz`` file.
 
         [-o|--outputFileStem <outputFileStem>]
-        The output file stem to store conversion. If this is specified
+        The output file stem to store image conversion. If this is specified
         with an extension, this extension will be used to specify the
         output file type.
 
