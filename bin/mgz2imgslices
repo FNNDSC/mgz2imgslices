@@ -114,7 +114,7 @@ def synopsis(ab_shortOnly=False):
     ARGS
 
         [-i|--inputFile  <inputFile>]
-        Input file to convert. Should be a .mgz file
+        Input file to convert. Should be an ``mgz`` file.
 
         [-o|--outputFileStem <outputFileStem>]
         The output file stem to store conversion. If this is specified
