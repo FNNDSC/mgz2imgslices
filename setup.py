@@ -20,7 +20,7 @@ setup(
       url              =   'https://github.com/FNNDSC/mgz2imgslices',
       packages         =   ['mgz2imgslices'],
       install_requires =   ['pfmisc', 'nibabel', 'pydicom', 'numpy', 'matplotlib', 'pillow', 
-                            'pandas', 're', 'imagio', 'time'],
+                            'pandas', 're', 'imageio', 'time'],
       #test_suite       =   'nose.collector',
       #tests_require    =   ['nose'],
       scripts          =   ['bin/mgz2imgslices'],
