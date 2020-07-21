@@ -1,10 +1,10 @@
-mgz2imgslices 1.0.6
+mgz2imgslices 1.0.8
 ===================
 
 Quick Overview
 --------------
 
--   Filters mgz volume files by voxel value to well organized directories of image files.
+-   Filters ``mgz`` volume files by voxel value to well organized directories of image files.
 
 Overview
 --------
