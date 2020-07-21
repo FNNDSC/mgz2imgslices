@@ -13,7 +13,7 @@ def readme():
 setup(
       name             =   'mgz2imgslices',
       version          =   '1.0.10',
-      description      =   '(Python) utility to convert mgz volumes to jpg and png',
+      description      =   '(Python) utility to filter mgz volumes to per-voxel-value directories of jpg/png image slices',
       long_description =   readme(),
       author           =   'FNNDSC',
       author_email     =   'dev@babymri.org',
