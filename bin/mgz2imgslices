@@ -15,7 +15,7 @@ import  sys
 sys.path.insert(1, os.path.join(os.path.dirname(__file__), '..'))
 import  argparse
 
-from    mgz2imgslices           import mgz2imgslices
+from    mgz2imgslices       import mgz2imgslices
 from    argparse            import RawTextHelpFormatter
 from    argparse            import ArgumentParser
 from    pfmisc._colors      import Colors
