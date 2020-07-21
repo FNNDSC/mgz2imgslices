@@ -1,5 +1,5 @@
-mgz2imgslices 1.0.8
-===================
+mgz2imgslices 1.0.10
+====================
 
 Quick Overview
 --------------
@@ -75,8 +75,8 @@ First, let's create a directory, say ``devel`` wherever you feel like it. We wil
 
 Now, we need to fetch sample MGZ data.
 
-Pull MGZ data
-~~~~~~~~~~~~~
+Pull ``mgz`` data
+~~~~~~~~~~~~~~~~~
 
 - We provide a sample directory of a few ``.mgz`` volumes here. (https://github.com/FNNDSC/mgz_converter_dataset.git)
 
