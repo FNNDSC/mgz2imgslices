@@ -192,10 +192,10 @@ Command Line Arguments
         Should be a ``png`` or ``jpg``.
 
         [--label <prefixForLabelDirectories>]
-        Adds the string <prefixForLabelDirectories> to each filtered directory
-        name. This is mostly for possible downstream processing, allowing a
-        subsequent operation to easily determine which of the output directories
-        correspond to labels.
+        Prefixes the string <prefixForLabelDirectories> to each filtered
+        directory name. This is mostly for possible downstream processing,
+        allowing a subsequent operation to easily determine which of the output
+        directories correspond to labels.
 
         [-n|--normalize]
         If specified, will normalize the output image pixel values to
@@ -214,7 +214,7 @@ Command Line Arguments
         modifying the CLI is more complex than simply setting the <LUTfile> to
         ``__val__``.
 
-        [-s|--skipLabelValueList] <ListOfLabelNumbersToSkip>
+        [-s|--skipLabelValueList <ListOfLabelNumbersToSkip>]
         If specified as a comma separated string of label numbers,
         will not create directories of those label numbers.
 
