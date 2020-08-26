@@ -22,7 +22,7 @@ from    pfmisc._colors      import Colors
 import  pudb
 
 
-str_version = "1.0.16"
+str_version = "1.0.18"
 
 str_desc    = Colors.CYAN + """
 
@@ -67,7 +67,7 @@ def synopsis(ab_shortOnly=False):
             [-n|--normalize]                                            \\
             [-l|--lookuptable <LUTfile>]                                \\
             [-s|--skipLabelValueList <ListOfVoxelValuesToSkip>]         \\
-            [-f|--filterLabelValueList <ListOfVoxelValuesToInclude>]       \\
+            [-f|--filterLabelValueList <ListOfVoxelValuesToInclude>]    \\
             [-w|--wholeVolume <wholeVolDirName>]                        \\
             [-h|--help]                                                 \\
             [--json]                                                    \\
