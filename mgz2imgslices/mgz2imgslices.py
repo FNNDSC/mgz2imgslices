@@ -10,6 +10,7 @@ import imageio
 import pandas as pd
 import re
 import time
+import pudb
 sys.path.append(os.path.dirname(__file__))
 import  pfmisc
 from    pfmisc._colors      import  Colors
@@ -62,6 +63,7 @@ class mgz2imgslices(object):
         self.str_inputFile              = ""
         self.str_outputFileStem         = ""
         self.str_outputFileType         = "png"
+        self._b_numpy                   = False
         self.str_label                  = "label"
         self._b_normalize               = False
         self.str_lookuptable            = "__val__"
@@ -72,23 +74,27 @@ class mgz2imgslices(object):
         self.l_filter                   = []
         self.__name__                   = "mgz2imgslices"
         self.verbosity                  = 1
+        self.str_version                = '1.1.20'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
                                             )
 
         for key, value in kwargs.items():
-            if key == "inputFile":              self.str_inputFile          = value
-            if key == "inputDir":               self.str_inputDir           = value
-            if key == "outputDir":              self.str_outputDir          = value
-            if key == "outputFileStem":         self.str_outputFileStem     = value
-            if key == "outputFileType":         self.str_outputFileType     = value
-            if key == "label":                  self.str_label              = value
-            if key == "normalize":              self._b_normalize           = value
-            if key == "lookuptable":            self.str_lookuptable        = value
-            if key == "skipLabelValueList":     self.str_skipLabelValueList = value
-            if key == "filterLabelValueList":   self.str_filterLabelValueList = value
-            if key == "wholeVolume":            self.str_wholeVolume        = value
+            if key == "inputFile":              self.str_inputFile              = value
+            if key == "inputDir":               self.str_inputDir               = value
+            if key == "outputDir":              self.str_outputDir              = value
+            if key == "outputFileStem":         self.str_outputFileStem         = value
+            if key == "outputFileType":         self.str_outputFileType         = value
+            if key == "numpy":                  self._b_numpy                   = value
+            if key == "label":                  self.str_label                  = value
+            if key == "normalize":              self._b_normalize               = value
+            if key == "lookuptable":            self.str_lookuptable            = value
+            if key == "skipLabelValueList":     self.str_skipLabelValueList     = value
+            if key == "filterLabelValueList":   self.str_filterLabelValueList   = value
+            if key == "wholeVolume":            self.str_wholeVolume            = value
+            if key == "verbosity":              self.verbosity                  = value
+            if key == "version":                self.str_version                = value
 
         if len(self.str_inputDir):
             self.str_inputFile  = '%s/%s' % (self.str_inputDir, self.str_inputFile)
@@ -162,6 +168,8 @@ class mgz2imgslices(object):
             else:
                 np_single_label = np.where(np_mgz_vol!=item, 0, item)
 
+            # pudb.set_trace()
+            
             i_total_slices = np_single_label.shape[0]
 
             str_dirname = self.lookup_table(item)
@@ -172,8 +180,14 @@ class mgz2imgslices(object):
 
                 # prevents lossy conversion
                 np_data=np_data.astype(np.uint8)
-
                 current_slice = "00"+str(current_slice)
+
+                #Saving numpy array directly
+    
+                if(self._b_numpy): 
+                    str_array_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
+                        self.str_outputFileStem, current_slice, 'npy')
+                    np.save(str_array_name, np_data)
 
                 str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
@@ -271,12 +285,17 @@ class object_factoryCreate:
             outputDir            = args.outputDir,
             outputFileStem       = args.outputFileStem,
             outputFileType       = args.outputFileType,
+            numpy                = args.numpy,
             label                = args.label,
             normalize            = args.normalize,
             lookuptable          = args.lookuptable,
             skipLabelValueList   = args.skipLabelValueList,
             filterLabelValueList = args.filterLabelValueList,
-            wholeVolume          = args.wholeVolume
+            wholeVolume          = args.wholeVolume,
+            printElapsedTime     = args.printElapsedTime,
+            man                  = args.man,
+            synopsis             = args.synopsis,
+            verbosity            = args.verbosity
         )
 
 

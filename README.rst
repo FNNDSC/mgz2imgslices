@@ -1,4 +1,4 @@
-mgz2imgslices 1.0.18
+mgz2imgslices 1.1.20
 ====================
 
 Quick Overview
@@ -191,6 +191,10 @@ Command Line Arguments
 
         Should be a ``png`` or ``jpg``.
 
+        [--numpy]
+        If specified as True(boolean), will save the slices of the mgz file as 
+        ".npy" files along with the image files.
+
         [--label <prefixForLabelDirectories>]
         Prefixes the string <prefixForLabelDirectories> to each filtered
         directory name. This is mostly for possible downstream processing,
@@ -198,7 +202,7 @@ Command Line Arguments
         directories correspond to labels.
 
         [-n|--normalize]
-        If specified, will normalize the output image pixel values to
+        If specified as True(boolean), will normalize the output image pixel values to
         0 and 1, otherwise pixel image values will retain the value in
         the original input volume.
 

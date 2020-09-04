@@ -22,7 +22,7 @@ from    pfmisc._colors      import Colors
 import  pudb
 
 
-str_version = "1.0.18"
+str_version = "1.1.20"
 
 str_desc    = Colors.CYAN + """
 
@@ -63,6 +63,7 @@ def synopsis(ab_shortOnly=False):
             [-I|--inputDir <inputDir>]                                  \\
             [-o|--outputFileStem]<outputFileStem>]                      \\
             [-t|--outputFileType <outputFileType>]                      \\
+            [--numpy]                                                   \\
             [--label <prefixForLabelDirectories>]                       \\
             [-n|--normalize]                                            \\
             [-l|--lookuptable <LUTfile>]                                \\
@@ -126,6 +127,10 @@ def synopsis(ab_shortOnly=False):
         will override extension in favour of <outputFileType>.
 
         Should be a ``png`` or ``jpg``.
+
+        [--numpy]
+        If specified as True(boolean), will save the slices of the mgz file as 
+        ".npy" files along with the image files.
 
         [--label <prefixForLabelDirectories>]
         Prefixes the string <prefixForLabelDirectories> to each filtered 
@@ -230,6 +235,11 @@ parser.add_argument('-t', '--outputFileType',
                     dest='outputFileType',
                     default = 'png'
                     )
+parser.add_argument('--numpy',
+                    help='store numpy arrays for each slice of mgz file as .npy files',
+                    dest='numpy',
+                    default = False
+                    )                    
 parser.add_argument('--label',
                     help='prefix a label to all the label directories',
                     dest='label',
@@ -280,7 +290,10 @@ parser.add_argument('-v', '--version',
                     dest    = 'b_version',
                     action  = 'store_true',
                     default = False)
-
+parser.add_argument("--verbosity",
+                    help    = "verbosity level for app",
+                    dest    = 'verbosity',
+                    default = "1")
 # parse passed arguments
 args = parser.parse_args()
 
