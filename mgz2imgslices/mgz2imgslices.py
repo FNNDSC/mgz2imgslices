@@ -74,7 +74,7 @@ class mgz2imgslices(object):
         self.l_filter                   = []
         self.__name__                   = "mgz2imgslices"
         self.verbosity                  = 1
-        self.str_version                = '1.2.20'
+        self.str_version                = '1.2.22'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__

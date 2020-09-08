@@ -22,7 +22,7 @@ from    pfmisc._colors      import Colors
 import  pudb
 
 
-str_version = "1.2.20"
+str_version = "1.2.22"
 
 str_desc    = Colors.CYAN + """
 
