@@ -13,9 +13,9 @@ Overview
 
 An ``mgz`` format file simply contains a 3D volume data structure of image values. Often these values are interpreted to be image intensities. Sometimes, however, they can be interpreted as label identifiers. Regardless of the interpretation, the volume image data is simply a number value in each voxel of the volume.
 
-This script will scan across the input ``mgz`` volume, and for each voxel value create a new output directory. In that directory will be a set of (typically) ``png`` images, one per slice of the original volume. These images will only contain the voxels in the original dataset that all had that particular voxel value.
+This script will scan across the input ``mgz`` volume, and for each voxel value create a new output directory. In that directory will be a set of numpy arrays (.npy files), one per slice of the original volume. These numpy arrays will only contain the voxel values in the original dataset that all had that particular voxel value.
 
-In this manner, ``mgz2imgslices`` can also be thought of as a dynamic filter of an ``mgz`` volume file that filters each voxel value into its own output directory of ``png`` image files.
+In this manner, ``mgz2imgslices`` can also be thought of as a dynamic filter of an ``mgz`` volume file that filters each voxel value into its own output directory of ``.npy`` files.
 
 Dependencies
 ------------
@@ -59,7 +59,7 @@ How to Use
 
 - ``-i | --inputFile <inputFile>``: The input ``.mgz`` file to convert.
 
-- ``-d | --outputDir <outputDir>``:  The output directory. This in turn will contain several subdirectores, one per image voxel value in the input ``mgz`` file. Each of these sub directories will contain ``png`` files, filtered to that voxel value.
+- ``-d | --outputDir <outputDir>``:  The output directory. This in turn will contain several subdirectores, one per image voxel value in the input ``mgz`` file. Each of these sub directories will contain ``npy`` files, filtered to that voxel value.
 
 Examples
 --------
@@ -108,7 +108,7 @@ EXAMPLE 1
         -inputFile aparc.a2009s+aseg.mgz                                       \
         --outputDir ${DEVEL}/results/                                          \
         --outputFileStem sample                                                \
-        --outputFileType jpg                                                   \
+        --outputFileType png                                                   \
         --label label                                                          \
         --wholeVolume FullVolume                                               \
         --lookuptable __val__                                                  \
@@ -118,16 +118,16 @@ The ``skipLabelValueList`` will skip any voxels in the input ``mgz`` that have n
 
 .. code:: bash
 
-    results/label-002/sample-000.jpg
+    results/label-002/sample-000.png
                         ...
-    results/label-002/sample-00255.jpg
+    results/label-002/sample-00255.png
 
     ...
     ...
 
-    results/label-0012175/sample-000.jpg
+    results/label-0012175/sample-000.png
                         ...
-    results/label-0012175/sample-00255.jpg
+    results/label-0012175/sample-00255.png
 
 
 EXAMPLE 2
@@ -158,16 +158,16 @@ Note that as above also, the output filtered directories are prefixed in this ca
 
 .. code:: bash
 
-    results/label-Left-Cerebral-White-Matter/sample-000.jpg
+    results/label-Left-Cerebral-White-Matter/sample-000.png
                             ...
-    results/label-Left-Cerebral-White-Matter/sample-00255.jpg
+    results/label-Left-Cerebral-White-Matter/sample-00255.png
 
     ...
     ...
 
-    results/label-ctx_rh_S_temporal_transverse/sample-000.jpg
+    results/label-ctx_rh_S_temporal_transverse/sample-000.png
                             ...
-    results/label-ctx_rh_S_temporal_transverse/sample-00255.jpg
+    results/label-ctx_rh_S_temporal_transverse/sample-00255.png
 
 
 Command Line Arguments
@@ -189,11 +189,11 @@ Command Line Arguments
         The output file type. If different to <outputFileStem> extension,
         will override extension in favour of <outputFileType>.
 
-        Should be a ``png`` or ``jpg``.
+        Should be a ``png``only.
 
-        [--numpy]
+        [--image]
         If specified as True(boolean), will save the slices of the mgz file as 
-        ".npy" files along with the image files.
+        ".png" image files along with the numpy files.
 
         [--label <prefixForLabelDirectories>]
         Prefixes the string <prefixForLabelDirectories> to each filtered

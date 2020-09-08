@@ -63,7 +63,7 @@ class mgz2imgslices(object):
         self.str_inputFile              = ""
         self.str_outputFileStem         = ""
         self.str_outputFileType         = "png"
-        self._b_numpy                   = False
+        self._b_image                   = False
         self.str_label                  = "label"
         self._b_normalize               = False
         self.str_lookuptable            = "__val__"
@@ -86,7 +86,7 @@ class mgz2imgslices(object):
             if key == "outputDir":              self.str_outputDir              = value
             if key == "outputFileStem":         self.str_outputFileStem         = value
             if key == "outputFileType":         self.str_outputFileType         = value
-            if key == "numpy":                  self._b_numpy                   = value
+            if key == "image":                  self._b_image                   = value
             if key == "label":                  self.str_label                  = value
             if key == "normalize":              self._b_normalize               = value
             if key == "lookuptable":            self.str_lookuptable            = value
@@ -184,15 +184,17 @@ class mgz2imgslices(object):
 
                 #Saving numpy array directly
     
-                if(self._b_numpy): 
-                    str_array_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
-                        self.str_outputFileStem, current_slice, 'npy')
-                    np.save(str_array_name, np_data)
-
-                str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
-                    self.str_outputFileStem, current_slice, self.str_outputFileType)
+                 
+                str_array_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
+                    self.str_outputFileStem, current_slice, 'npy')
                 self.dp.qprint("Saving %s" % str_image_name, level = 2)
-                imageio.imwrite(str_image_name, np_data)
+                np.save(str_array_name, np_data)
+
+                if(self._b_image):
+                    str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
+                        self.str_outputFileStem, current_slice, self.str_outputFileType)
+                    self.dp.qprint("Saving %s" % str_image_name, level = 2)
+                    imageio.imwrite(str_image_name, np_data)
 
     def convert_whole_volume(self, np_mgz_vol):
         i_total_slices = np_mgz_vol.shape[0]
@@ -210,10 +212,17 @@ class mgz2imgslices(object):
 
             current_slice = "00"+str(current_slice)
 
-            str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
-                self.str_outputFileStem, current_slice, self.str_outputFileType)
+            str_array_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
+                    self.str_outputFileStem, current_slice, 'npy')
             self.dp.qprint("Saving %s" % str_image_name, level = 2)
-            imageio.imwrite(str_image_name, np_data)
+            np.save(str_array_name, np_data)
+            
+
+            if(self._b_image):
+                str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
+                    self.str_outputFileStem, current_slice, self.str_outputFileType)
+                self.dp.qprint("Saving %s" % str_image_name, level = 2)
+                imageio.imwrite(str_image_name, np_data)
 
     def run(self):
         """
@@ -285,7 +294,7 @@ class object_factoryCreate:
             outputDir            = args.outputDir,
             outputFileStem       = args.outputFileStem,
             outputFileType       = args.outputFileType,
-            numpy                = args.numpy,
+            image                = args.image,
             label                = args.label,
             normalize            = args.normalize,
             lookuptable          = args.lookuptable,

@@ -235,9 +235,9 @@ parser.add_argument('-t', '--outputFileType',
                     dest='outputFileType',
                     default = 'png'
                     )
-parser.add_argument('--numpy',
-                    help='store numpy arrays for each slice of mgz file as .npy files',
-                    dest='numpy',
+parser.add_argument('--image',
+                    help='store png images for each slice of mgz file',
+                    dest='image',
                     default = False
                     )                    
 parser.add_argument('--label',
