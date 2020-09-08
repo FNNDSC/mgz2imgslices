@@ -187,7 +187,7 @@ class mgz2imgslices(object):
                  
                 str_array_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                     self.str_outputFileStem, current_slice, 'npy')
-                self.dp.qprint("Saving %s" % str_image_name, level = 2)
+                self.dp.qprint("Saving %s" % str_array_name, level = 2)
                 np.save(str_array_name, np_data)
 
                 if(self._b_image):
@@ -214,7 +214,7 @@ class mgz2imgslices(object):
 
             str_array_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
                     self.str_outputFileStem, current_slice, 'npy')
-            self.dp.qprint("Saving %s" % str_image_name, level = 2)
+            self.dp.qprint("Saving %s" % str_array_name, level = 2)
             np.save(str_array_name, np_data)
             
 

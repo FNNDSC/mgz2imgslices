@@ -146,7 +146,7 @@ EXAMPLE 2
         -inputFile aparc.a2009s+aseg.mgz                                        \
         --outputDir ${DEVEL}/results/                                           \
         --outputFileStem sample                                                 \
-        --outputFileType jpg                                                    \
+        --outputFileType png                                                    \
         --label label                                                           \
         --wholeVolume FullVolume                                                \
         --lookuptable FreeSurferColorLUT.txt                                    \
