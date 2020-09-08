@@ -63,7 +63,7 @@ def synopsis(ab_shortOnly=False):
             [-I|--inputDir <inputDir>]                                  \\
             [-o|--outputFileStem]<outputFileStem>]                      \\
             [-t|--outputFileType <outputFileType>]                      \\
-            [--numpy]                                                   \\
+            [--image]                                                   \\
             [--label <prefixForLabelDirectories>]                       \\
             [-n|--normalize]                                            \\
             [-l|--lookuptable <LUTfile>]                                \\
@@ -128,9 +128,9 @@ def synopsis(ab_shortOnly=False):
 
         Should be a ``png`` or ``jpg``.
 
-        [--numpy]
+        [--image]
         If specified as True(boolean), will save the slices of the mgz file as 
-        ".npy" files along with the image files.
+        ".png" files along with the numpy files.
 
         [--label <prefixForLabelDirectories>]
         Prefixes the string <prefixForLabelDirectories> to each filtered 
