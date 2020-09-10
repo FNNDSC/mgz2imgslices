@@ -135,7 +135,7 @@ class mgz2imgslices(object):
         return f_elapsedTime
 
     def readFSColorLUT(self, str_filename):
-        l_column_names = ["#No", "LabelName"]
+        l_column_names = ["#No", "LabelName", "R", "G", "B", "A"]
 
         df_FSColorLUT = pd.DataFrame(columns=l_column_names)
 
@@ -144,8 +144,12 @@ class mgz2imgslices(object):
                 if line and line[0].isdigit():
                     line = re.sub(' +', ' ', line)
                     l_line = line.split(' ')
-                    l_labels = l_line[:2]
+                    l_labels = l_line[:]
                     df_FSColorLUT.loc[len(df_FSColorLUT)] = l_labels
+                    df_FSColorLUT['R'] = df_FSColorLUT['R'].astype(int)
+                    df_FSColorLUT['G'] = df_FSColorLUT['G'].astype(int)
+                    df_FSColorLUT['B'] = df_FSColorLUT['B'].astype(int)
+                    df_FSColorLUT['A'] = df_FSColorLUT['A'].astype(int)    
 
         return df_FSColorLUT
 
@@ -153,7 +157,7 @@ class mgz2imgslices(object):
         if self.str_lookuptable == "__val__":
             str_dirname = "00"+str(int(item))
         elif self.str_lookuptable == "__fs__":
-            df_FSColorLUT = self.readFSColorLUT("../FreeSurferColorLUT.txt")
+            df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
             str_dirname = df_FSColorLUT.loc[df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
         else:
             df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
@@ -174,21 +178,21 @@ class mgz2imgslices(object):
 
             str_dirname = self.lookup_table(item)
 
+            np_single_label=np_single_label.astype(int)
+
+            str_whole_array = "%s/%s-%s/%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
+                self.str_outputFileStem, 'npy')
+            self.dp.qprint("Saving %s" % str_whole_array, level = 1)
+            np.save(str_whole_array, np_single_label)
+
             # iterate through slices
             for current_slice in range(0, i_total_slices):
                 np_data = np_single_label[:, :, current_slice]
 
                 # prevents lossy conversion
                 np_data=np_data.astype(np.uint8)
-                current_slice = "00"+str(current_slice)
 
-                #Saving numpy array directly
-    
-                 
-                str_array_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
-                    self.str_outputFileStem, current_slice, 'npy')
-                self.dp.qprint("Saving %s" % str_array_name, level = 1)
-                np.save(str_array_name, np_data)
+                current_slice = "00"+str(current_slice)
 
                 if(self._b_image):
                     str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
@@ -203,6 +207,13 @@ class mgz2imgslices(object):
 
         os.mkdir("%s/%s" % (self.str_outputDir, str_whole_dirname))
 
+        np_mgz_vol=np_mgz_vol.astype(int)
+
+        str_whole_array = "%s/%s/%s.%s" % (self.str_outputDir, str_whole_dirname,
+            self.str_outputFileStem, 'npy')
+        self.dp.qprint("Saving %s" % str_whole_array, level = 1)
+        np.save(str_whole_array, np_mgz_vol)
+
         # iterate through slices
         for current_slice in range(0, i_total_slices):
             np_data = np_mgz_vol[:, :, current_slice]
@@ -211,13 +222,7 @@ class mgz2imgslices(object):
             np_data=np_data.astype(np.uint8)
 
             current_slice = "00"+str(current_slice)
-
-            str_array_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
-                    self.str_outputFileStem, current_slice, 'npy')
-            self.dp.qprint("Saving %s" % str_array_name, level = 1)
-            np.save(str_array_name, np_data)
-            
-
+    
             if(self._b_image):
                 str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
