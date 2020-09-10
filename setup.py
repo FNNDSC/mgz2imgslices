@@ -12,7 +12,7 @@ def readme():
 
 setup(
       name             =   'mgz2imgslices',
-      version          =   '1.2.22',
+      version          =   '1.3.22',
       description      =   '(Python) utility to filter mgz volumes to per-voxel-value directories of jpg/png image slices',
       long_description =   readme(),
       author           =   'FNNDSC',
