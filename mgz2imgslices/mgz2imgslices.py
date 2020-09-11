@@ -165,6 +165,14 @@ class mgz2imgslices(object):
 
         return str_dirname
 
+    def save_images(self, df_FSColorLUT, np_data):
+        np_color_image=np.zeros([256, 256, 3], dtype=np.uint8)
+        for i in range(0,255):
+            for j in range(0,255):
+                np_color_image[i][j][:]=[df_FSColorLUT["R"][np_data[i][j]],df_FSColorLUT["G"][np_data[i][j]],df_FSColorLUT["B"][np_data[i][j]]]
+
+        return np_color_image
+
     def nparray_to_imgs(self, np_mgz_vol, item):
         #mask voxels other than the current label to 0 values
             if(self._b_normalize):
@@ -172,8 +180,6 @@ class mgz2imgslices(object):
             else:
                 np_single_label = np.where(np_mgz_vol!=item, 0, item)
 
-            # pudb.set_trace()
-            
             i_total_slices = np_single_label.shape[0]
 
             str_dirname = self.lookup_table(item)
@@ -195,10 +201,15 @@ class mgz2imgslices(object):
                 current_slice = "00"+str(current_slice)
 
                 if(self._b_image):
-                    str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
+                    # Generate a color image
+                    df_FSColorLUT = self.readFSColorLUT("FreeSurferColorLUT.txt")
+
+                    np_color_image = self.save_images(df_FSColorLUT, np_data)
+
+                    str_color_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                         self.str_outputFileStem, current_slice, self.str_outputFileType)
-                    self.dp.qprint("Saving %s" % str_image_name, level = 1)
-                    imageio.imwrite(str_image_name, np_data)
+                    self.dp.qprint("Saving %s" % str_color_image_name, level = 1)
+                    imageio.imwrite(str_color_image_name, np_color_image)
 
     def convert_whole_volume(self, np_mgz_vol):
         i_total_slices = np_mgz_vol.shape[0]
@@ -224,10 +235,15 @@ class mgz2imgslices(object):
             current_slice = "00"+str(current_slice)
     
             if(self._b_image):
-                str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
-                    self.str_outputFileStem, current_slice, self.str_outputFileType)
-                self.dp.qprint("Saving %s" % str_image_name, level = 1)
-                imageio.imwrite(str_image_name, np_data)
+                # Generate a color image
+                df_FSColorLUT = self.readFSColorLUT("FreeSurferColorLUT.txt")
+
+                np_color_image=self.save_images(df_FSColorLUT, np_data)
+
+                str_color_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
+                    self.str_outputFileStem+"color", current_slice, self.str_outputFileType)
+                self.dp.qprint("Saving %s" % str_color_image_name, level = 1)
+                imageio.imwrite(str_color_image_name, np_color_image)
 
     def run(self):
         """
