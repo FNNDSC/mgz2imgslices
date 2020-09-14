@@ -202,7 +202,7 @@ class mgz2imgslices(object):
 
                 if(self._b_image):
                     # Generate a color image
-                    df_FSColorLUT = self.readFSColorLUT("FreeSurferColorLUT.txt")
+                    df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
 
                     np_color_image = self.save_images(df_FSColorLUT, np_data)
 
