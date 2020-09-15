@@ -74,7 +74,7 @@ class mgz2imgslices(object):
         self.l_filter                   = []
         self.__name__                   = "mgz2imgslices"
         self.verbosity                  = 1
-        self.str_version                = '1.3.24'
+        self.str_version                = '1.3.26'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
@@ -241,7 +241,7 @@ class mgz2imgslices(object):
                 np_color_image=self.save_images(df_FSColorLUT, np_data)
 
                 str_color_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
-                    self.str_outputFileStem+"color", current_slice, self.str_outputFileType)
+                    self.str_outputFileStem, current_slice, self.str_outputFileType)
                 self.dp.qprint("Saving %s" % str_color_image_name, level = 1)
                 imageio.imwrite(str_color_image_name, np_color_image)
 
