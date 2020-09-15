@@ -73,8 +73,9 @@ class mgz2imgslices(object):
         self.l_skip                     = []
         self.l_filter                   = []
         self.__name__                   = "mgz2imgslices"
+        self.df_FSColorLUT              = None
         self.verbosity                  = 1
-        self.str_version                = '1.3.26'
+        self.str_version                = '1.3.28'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
@@ -101,6 +102,7 @@ class mgz2imgslices(object):
         if not len(self.str_inputDir):
             self.str_inputDir = os.path.dirname(self.str_inputFile)
         if not len(self.str_inputDir): self.str_inputDir = '.'
+        
         str_fileName, str_fileExtension  = os.path.splitext(self.str_outputFileStem)
         if len(self.str_outputFileType):
             str_fileExtension            = '.%s' % self.str_outputFileType
@@ -111,6 +113,10 @@ class mgz2imgslices(object):
         if not len(self.str_outputFileType) and not len(str_fileExtension):
             self.str_outputFileType     = '.png'
 
+        if (self.str_lookuptable == '__val__') or (self.str_lookuptable == '__fs__'):
+            self.df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
+        else:
+            self.df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
     def tic(self):
         """
             Port of the MatLAB function of same name
@@ -157,11 +163,11 @@ class mgz2imgslices(object):
         if self.str_lookuptable == "__val__":
             str_dirname = "00"+str(int(item))
         elif self.str_lookuptable == "__fs__":
-            df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
-            str_dirname = df_FSColorLUT.loc[df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
+            # df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
+            str_dirname = self.df_FSColorLUT.loc[self.df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
         else:
-            df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
-            str_dirname = df_FSColorLUT.loc[df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
+            # df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
+            str_dirname = self.df_FSColorLUT.loc[self.df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
 
         return str_dirname
 
@@ -198,13 +204,14 @@ class mgz2imgslices(object):
                 # prevents lossy conversion
                 np_data=np_data.astype(np.uint8)
 
-                current_slice = "00"+str(current_slice)
+                current_slice = "%03d" %(current_slice)
+                current_slice = str(current_slice)
 
                 if(self._b_image):
                     # Generate a color image
-                    df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
+                    # df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
 
-                    np_color_image = self.save_images(df_FSColorLUT, np_data)
+                    np_color_image = self.save_images(self.df_FSColorLUT, np_data)
 
                     str_color_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                         self.str_outputFileStem, current_slice, self.str_outputFileType)
@@ -232,13 +239,14 @@ class mgz2imgslices(object):
             # prevents lossy conversion
             np_data=np_data.astype(np.uint8)
 
-            current_slice = "00"+str(current_slice)
+            current_slice = "%03d" %(current_slice)
+            current_slice = str(current_slice)
     
             if(self._b_image):
                 # Generate a color image
-                df_FSColorLUT = self.readFSColorLUT("FreeSurferColorLUT.txt")
+                # df_FSColorLUT = self.readFSColorLUT("FreeSurferColorLUT.txt")
 
-                np_color_image=self.save_images(df_FSColorLUT, np_data)
+                np_color_image=self.save_images(self.df_FSColorLUT, np_data)
 
                 str_color_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
