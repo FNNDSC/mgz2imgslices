@@ -11,6 +11,12 @@ import pandas as pd
 import re
 import time
 import pudb
+import skimage
+from skimage.io import imread
+from skimage.io import imshow
+from skimage.io import imsave
+import matplotlib
+
 sys.path.append(os.path.dirname(__file__))
 import  pfmisc
 from    pfmisc._colors      import  Colors
@@ -159,25 +165,43 @@ class mgz2imgslices(object):
 
         return df_FSColorLUT
 
+    def save_color_image(self, df_FSColorLUT, np_data):
+        np_data = np_data.astype(np.uint16)
+
+        ## Convert the lookup to a dictionary of voxels
+        l_labels = np.unique(np_data)
+        d_LUT    = {}
+        for label in l_labels:
+            voxel_RGB = np.array([df_FSColorLUT["R"][label], 
+                                df_FSColorLUT["G"][label], 
+                                df_FSColorLUT["B"][label]]).astype(np.uint8)
+            d_LUT[label] = voxel_RGB
+        # Flatten the label image into a vector
+        v_npdata = np_data.flatten()
+        # And create a 3-plane voxel vector
+        (n, m)  = np_data.shape
+        v_voxel = np.array([np.zeros(3)] * n*m)
+        # And now the the python list comprehension lookup
+
+        # startTime = time.time()
+        v_voxel = np.array([d_LUT[val] for val in v_npdata])
+        # endTime = time.time()
+        # print('Elapsed time = ', endTime - startTime)
+
+        # Reshape back into a matrix
+        M_voxel = v_voxel.reshape((256, 256, 3))
+        
+        return M_voxel
+
     def lookup_table(self, item):
         if self.str_lookuptable == "__val__":
             str_dirname = "00"+str(int(item))
         elif self.str_lookuptable == "__fs__":
-            # df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
             str_dirname = self.df_FSColorLUT.loc[self.df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
         else:
-            # df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
             str_dirname = self.df_FSColorLUT.loc[self.df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
 
         return str_dirname
-
-    def save_images(self, df_FSColorLUT, np_data):
-        np_color_image=np.zeros([256, 256, 3], dtype=np.uint8)
-        for i in range(0,255):
-            for j in range(0,255):
-                np_color_image[i][j][:]=[df_FSColorLUT["R"][np_data[i][j]],df_FSColorLUT["G"][np_data[i][j]],df_FSColorLUT["B"][np_data[i][j]]]
-
-        return np_color_image
 
     def nparray_to_imgs(self, np_mgz_vol, item):
         #mask voxels other than the current label to 0 values
@@ -209,14 +233,14 @@ class mgz2imgslices(object):
 
                 if(self._b_image):
                     # Generate a color image
-                    # df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
 
-                    np_color_image = self.save_images(self.df_FSColorLUT, np_data)
+                    np_color_image = self.save_color_image(self.df_FSColorLUT, np_data)
 
                     str_color_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                         self.str_outputFileStem, current_slice, self.str_outputFileType)
                     self.dp.qprint("Saving %s" % str_color_image_name, level = 1)
-                    imageio.imwrite(str_color_image_name, np_color_image)
+
+                    matplotlib.image.imsave(str_color_image_name, np_color_image)
 
     def convert_whole_volume(self, np_mgz_vol):
         i_total_slices = np_mgz_vol.shape[0]
@@ -244,14 +268,14 @@ class mgz2imgslices(object):
     
             if(self._b_image):
                 # Generate a color image
-                # df_FSColorLUT = self.readFSColorLUT("FreeSurferColorLUT.txt")
 
-                np_color_image=self.save_images(self.df_FSColorLUT, np_data)
+                np_color_image=self.save_color_image(self.df_FSColorLUT, np_data)
 
                 str_color_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
                 self.dp.qprint("Saving %s" % str_color_image_name, level = 1)
-                imageio.imwrite(str_color_image_name, np_color_image)
+
+                matplotlib.image.imsave(str_color_image_name, np_color_image)
 
     def run(self):
         """
@@ -306,11 +330,7 @@ class object_factoryCreate:
         str_outputFileStem, str_outputFileExtension = os.path.splitext(args.outputFileStem)
         if len(str_outputFileExtension):
             str_outputFileExtension = str_outputFileExtension.split('.')[1]
-        # try:
-        #     str_inputFileStem, str_inputFileExtension = os.path.splitext(args.inputFile)
-        # except:
-        #     sys.exit(1)
-
+        
         if not len(args.outputFileType) and len(str_outputFileExtension):
             args.outputFileType = str_outputFileExtension
 
