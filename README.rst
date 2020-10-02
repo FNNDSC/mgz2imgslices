@@ -109,9 +109,10 @@ EXAMPLE 1
         --outputDir ${DEVEL}/results/                                          \
         --outputFileStem sample                                                \
         --outputFileType png                                                   \
+        --image
         --label label                                                          \
         --wholeVolume FullVolume                                               \
-        --lookuptable __val__                                                  \
+        --lookuptable FreeSurferColorLUT.txt                                                  \
         --skipLabelValueList 0,4,7
 
 The ``skipLabelValueList`` will skip any voxels in the input ``mgz`` that have numerical values of, in this case, ``0, 4, 7``. Note that each output filtered directory will have a name prefix string of ``label`` and should appear something similar to:
@@ -207,16 +208,23 @@ Command Line Arguments
         the original input volume.
 
         [-l|--lookuptable <LUTfile>]
-        If passed, perform a looktup on the filtered voxel label values
+        Need to pass a <LUTfile> (eg. FreeSurferColorLUT.txt)
+        to perform a looktup on the filtered voxel label values
         according to the contents of the <LUTfile>. This <LUTfile> should
         conform to the FreeSurfer lookup table format (documented elsewhere).
 
-        Note that the special <LUTfile> string ``__val__`` can be passed which
+        Note that the special <LUTfile> string ``__val__`` can be passed only when 
+        running the docker image (fnndsc/pl-mgz2imageslices) of this utility which
         effectively means "no <LUTfile>". In this case, the numerical voxel
         values are used for output directory names. This special string is
         really only useful for scripted cases of running this application when
         modifying the CLI is more complex than simply setting the <LUTfile> to
         ``__val__``.
+
+        While running the docker image, you can also pass ``__fs__`` which will use
+        the FreeSurferColorLUT.txt from within the docker container to perform a 
+        looktup on the filtered voxel label values according to the contents of 
+        the FreeSurferColorLUT.txt
 
         [-s|--skipLabelValueList <ListOfLabelNumbersToSkip>]
         If specified as a comma separated string of label numbers,
