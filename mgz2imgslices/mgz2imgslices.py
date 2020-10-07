@@ -93,10 +93,10 @@ class mgz2imgslices(object):
             if key == "outputDir":              self.str_outputDir              = value
             if key == "outputFileStem":         self.str_outputFileStem         = value
             if key == "outputFileType":         self.str_outputFileType         = value
-            if key == "image":                  self._b_image                   = value
+            if key == "saveImages":             self._b_image                   = value
             if key == "label":                  self.str_label                  = value
             if key == "normalize":              self._b_normalize               = value
-            if key == "lookuptable":            self.str_lookuptable            = value
+            if key == "lookupTable":            self.str_lookuptable            = value
             if key == "skipLabelValueList":     self.str_skipLabelValueList     = value
             if key == "filterLabelValueList":   self.str_filterLabelValueList   = value
             if key == "wholeVolume":            self.str_wholeVolume            = value
@@ -343,10 +343,10 @@ class object_factoryCreate:
             outputDir            = args.outputDir,
             outputFileStem       = args.outputFileStem,
             outputFileType       = args.outputFileType,
-            image                = args.image,
+            saveImages           = args.saveImages,
             label                = args.label,
             normalize            = args.normalize,
-            lookuptable          = args.lookuptable,
+            lookupTable          = args.lookupTable,
             skipLabelValueList   = args.skipLabelValueList,
             filterLabelValueList = args.filterLabelValueList,
             wholeVolume          = args.wholeVolume,
