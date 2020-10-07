@@ -1,4 +1,4 @@
-mgz2imgslices 1.3.32
+mgz2imgslices 1.3.34
 ====================
 
 Quick Overview
@@ -109,10 +109,10 @@ EXAMPLE 1
         --outputDir ${DEVEL}/results/                                          \
         --outputFileStem sample                                                \
         --outputFileType png                                                   \
-        --image
+        --saveImages
         --label label                                                          \
         --wholeVolume FullVolume                                               \
-        --lookuptable FreeSurferColorLUT.txt                                                  \
+        --lookupTable FreeSurferColorLUT.txt                                                  \
         --skipLabelValueList 0,4,7
 
 The ``skipLabelValueList`` will skip any voxels in the input ``mgz`` that have numerical values of, in this case, ``0, 4, 7``. Note that each output filtered directory will have a name prefix string of ``label`` and should appear something similar to:
@@ -150,7 +150,7 @@ EXAMPLE 2
         --outputFileType png                                                    \
         --label label                                                           \
         --wholeVolume FullVolume                                                \
-        --lookuptable FreeSurferColorLUT.txt                                    \
+        --lookupTable FreeSurferColorLUT.txt                                    \
         --skipLabelValueList 0,4,7
 
 As above, this will skip some values in the input ``mgz`` file and create filtered directories in the output. However, instead of naming the output directories with the numerical value of the filtered (labelled) voxel value, the directory names will be looked up in the ``lookuptable`` file which associates a given voxel numerical value with a text name.
@@ -192,7 +192,7 @@ Command Line Arguments
 
         Should be a ``png``only.
 
-        [--image]
+        [--saveImages]
         If specified as True(boolean), will save the slices of the mgz file as 
         ".png" image files along with the numpy files.
 
@@ -207,7 +207,7 @@ Command Line Arguments
         0 and 1, otherwise pixel image values will retain the value in
         the original input volume.
 
-        [-l|--lookuptable <LUTfile>]
+        [-l|--lookupTable <LUTfile>]
         Need to pass a <LUTfile> (eg. FreeSurferColorLUT.txt)
         to perform a looktup on the filtered voxel label values
         according to the contents of the <LUTfile>. This <LUTfile> should

@@ -72,7 +72,7 @@ class mgz2imgslices(object):
         self._b_image                   = False
         self.str_label                  = "label"
         self._b_normalize               = False
-        self.str_lookuptable            = "__val__"
+        self.str_lookupTable            = "__val__"
         self.str_skipLabelValueList     = ""
         self.str_filterLabelValueList   = "-1"
         self.str_wholeVolume            = ""
@@ -81,7 +81,7 @@ class mgz2imgslices(object):
         self.__name__                   = "mgz2imgslices"
         self.df_FSColorLUT              = None
         self.verbosity                  = 1
-        self.str_version                = '1.3.32'
+        self.str_version                = '1.3.34'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
@@ -96,7 +96,7 @@ class mgz2imgslices(object):
             if key == "saveImages":             self._b_image                   = value
             if key == "label":                  self.str_label                  = value
             if key == "normalize":              self._b_normalize               = value
-            if key == "lookupTable":            self.str_lookuptable            = value
+            if key == "lookupTable":            self.str_lookupTable            = value
             if key == "skipLabelValueList":     self.str_skipLabelValueList     = value
             if key == "filterLabelValueList":   self.str_filterLabelValueList   = value
             if key == "wholeVolume":            self.str_wholeVolume            = value
@@ -119,10 +119,10 @@ class mgz2imgslices(object):
         if not len(self.str_outputFileType) and not len(str_fileExtension):
             self.str_outputFileType     = '.png'
 
-        if (self.str_lookuptable == '__val__') or (self.str_lookuptable == '__fs__'):
+        if (self.str_lookupTable == '__val__') or (self.str_lookupTable == '__fs__'):
             self.df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
         else:
-            self.df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookuptable))
+            self.df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookupTable))
     def tic(self):
         """
             Port of the MatLAB function of same name
@@ -194,9 +194,9 @@ class mgz2imgslices(object):
         return M_voxel
 
     def lookup_table(self, item):
-        if self.str_lookuptable == "__val__":
+        if self.str_lookupTable == "__val__":
             str_dirname = "00"+str(int(item))
-        elif self.str_lookuptable == "__fs__":
+        elif self.str_lookupTable == "__fs__":
             str_dirname = self.df_FSColorLUT.loc[self.df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
         else:
             str_dirname = self.df_FSColorLUT.loc[self.df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
