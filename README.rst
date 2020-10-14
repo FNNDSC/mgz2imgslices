@@ -114,7 +114,7 @@ EXAMPLE 1
 
     mgz2imgslices
         -I ${DEVEL}/mgz_converter_dataset/100307/                              \
-        -inputFile aparc.a2009s+aseg.mgz                                       \
+        --inputFile aparc.a2009s+aseg.mgz                                       \
         --outputDir ${DEVEL}/results/                                          \
         --outputFileStem sample                                                \
         --outputFileType png                                                   \
@@ -128,56 +128,17 @@ The ``skipLabelValueList`` will skip any voxels in the input ``mgz`` that have n
 
 .. code:: bash
 
-    results/label-002/sample-000.png
-                        ...
-    results/label-002/sample-00255.png
-
-    ...
-    ...
-
-    results/label-0012175/sample-000.png
-                        ...
-    results/label-0012175/sample-00255.png
-
-
-EXAMPLE 2
-^^^^^^^^^
-
-- This example uses the ``FreeSurferColorLUT.txt`` file to lookup textual names of the voxel values and use more descriptive string for the directory stem.
-
-- Make sure that your ``LUT.txt`` file is present in the ``([-I] [--inputDir])`` (in this case: ``${DEVEL}/mgz_converter_dataset/100307/``) and follows the format of the ``FreeSurferColorLUT.txt`` file. (https://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/AnatomicalROI/FreeSurferColorLUT)
-
-- Run ``mgz2imgslices`` using the following command. Change the arguments according to your need.
-
-.. code:: bash
-
-   mgz2imgslices
-        -I ${DEVEL}/mgz_converter_dataset/100307/                               \
-        -inputFile aparc.a2009s+aseg.mgz                                        \
-        --outputDir ${DEVEL}/results/                                           \
-        --outputFileStem sample                                                 \
-        --outputFileType png                                                    \
-        --label label                                                           \
-        --wholeVolume FullVolume                                                \
-        --lookupTable FreeSurferColorLUT.txt                                    \
-        --skipLabelValueList 0,4,7
-
-As above, this will skip some values in the input ``mgz`` file and create filtered directories in the output. However, instead of naming the output directories with the numerical value of the filtered (labelled) voxel value, the directory names will be looked up in the ``lookuptable`` file which associates a given voxel numerical value with a text name.
-
-Note that as above also, the output filtered directories are prefixed in this case with the text string ``label``.
-
-.. code:: bash
-
     results/label-Left-Cerebral-White-Matter/sample-000.png
-                            ...
+                        ...
     results/label-Left-Cerebral-White-Matter/sample-00255.png
 
     ...
     ...
 
     results/label-ctx_rh_S_temporal_transverse/sample-000.png
-                            ...
+                        ...
     results/label-ctx_rh_S_temporal_transverse/sample-00255.png
+
 
 
 Command Line Arguments
