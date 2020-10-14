@@ -61,6 +61,15 @@ How to Use
 
 - ``-d | --outputDir <outputDir>``:  The output directory. This in turn will contain several subdirectores, one per image voxel value in the input ``mgz`` file. Each of these sub directories will contain ``npy`` files, filtered to that voxel value.
 
+- ``-o | --outputFileStem <outputFileStem>`` : The name of the output files within the label directories (numpy arrays and png/jpg images)
+
+
+**NOTE:**
+
+- The ``--lookupTable`` arg for this Python utility requires that you pass ``FreeSurferColorLUT.txt`` (or another LUT file of the same format) which should be present within the ``inputDir``.
+
+- If you are using the docker image (visit https://github.com/FNNDSC/pl-mgz2imgslices) to run this utility, you can use either ``__fs__`` or ``__val__``  to the ``--lookupTable`` argument.
+
 Examples
 --------
 
