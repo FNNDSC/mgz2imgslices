@@ -23,6 +23,7 @@ from    pfmisc._colors      import  Colors
 from    pfmisc.debug        import  debug
 
 class mgz2imgslices(object):
+
     """
         mgz2imgslices accepts as input an .mgz volume
         and converts each slice of the .mgz volume to a graphical
@@ -60,7 +61,7 @@ class mgz2imgslices(object):
             return self.str_desc
 
     def __init__(self, **kwargs):
-
+        
         self.str_desc                   = ""
         self.__name__                   = "mgz2imgslices"
 
@@ -102,6 +103,7 @@ class mgz2imgslices(object):
             if key == "wholeVolume":            self.str_wholeVolume            = value
             if key == "verbosity":              self.verbosity                  = value
             if key == "version":                self.str_version                = value
+            if key == "optimize":               self.optimize                   = value
 
         if len(self.str_inputDir):
             self.str_inputFile  = '%s/%s' % (self.str_inputDir, self.str_inputFile)
@@ -192,6 +194,36 @@ class mgz2imgslices(object):
         M_voxel = v_voxel.reshape((256, 256, 3))
         
         return M_voxel
+        
+    def save_color_image_opt(self, df_FSColorLUT, np_data):
+        np_data = np_data.astype(np.uint16)
+
+        labels = np.unique(np_data)
+        np_data=np_data*100
+
+        imgR = np.zeros([256,256], np.uint16)
+        imgB = np.zeros([256,256], np.uint16)
+        imgG = np.zeros([256,256], np.uint16)
+
+        imgR[:][:] = np_data
+        imgB[:][:] = np_data
+        imgG[:][:] = np_data
+
+        imgR.flatten()
+        imgB.flatten()
+        imgG.flatten()
+
+
+        for label in labels:
+            imgR[imgR==label*100] = df_FSColorLUT["R"][label]
+            imgG[imgG==label*100] = df_FSColorLUT["G"][label]
+            imgB[imgB==label*100] = df_FSColorLUT["B"][label]
+
+        # Horizontal stack and transpose
+        color_image= np.stack((imgR.T,imgG.T,imgB.T)).T
+        color_image=color_image.reshape(256,256,3)
+        color_image = color_image.astype(np.uint8)
+        return color_image
 
     def lookup_table(self, item):
         if self.str_lookupTable == "__val__":
@@ -233,8 +265,12 @@ class mgz2imgslices(object):
 
                 if(self._b_image):
                     # Generate a color image
+                    if self.optimize:
+                        np_color_image = self.save_color_image_opt(self.df_FSColorLUT, np_data)
+                    else:
+                        np_color_image = self.save_color_image(self.df_FSColorLUT, np_data)
 
-                    np_color_image = self.save_color_image(self.df_FSColorLUT, np_data)
+                    
 
                     str_color_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                         self.str_outputFileStem, current_slice, self.str_outputFileType)
@@ -353,7 +389,8 @@ class object_factoryCreate:
             printElapsedTime     = args.printElapsedTime,
             man                  = args.man,
             synopsis             = args.synopsis,
-            verbosity            = args.verbosity
+            verbosity            = args.verbosity,
+            optimize             = args.optimize
         )
 
 
