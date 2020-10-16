@@ -22,7 +22,7 @@ from    pfmisc._colors      import Colors
 import  pudb
 
 
-str_version = "1.3.34"
+str_version = "1.4.34"
 
 str_desc    = Colors.CYAN + """
 
@@ -63,13 +63,14 @@ def synopsis(ab_shortOnly=False):
             [-I|--inputDir <inputDir>]                                  \\
             [-o|--outputFileStem]<outputFileStem>]                      \\
             [-t|--outputFileType <outputFileType>]                      \\
-            [--saveImages]                                                   \\
+            [--saveImages]                                              \\
             [--label <prefixForLabelDirectories>]                       \\
             [-n|--normalize]                                            \\
             [-l|--lookupTable <LUTfile>]                                \\
             [-s|--skipLabelValueList <ListOfVoxelValuesToSkip>]         \\
             [-f|--filterLabelValueList <ListOfVoxelValuesToInclude>]    \\
             [-w|--wholeVolume <wholeVolDirName>]                        \\
+            [--optimize]                                                \\
             [-h|--help]                                                 \\
             [--json]                                                    \\
             [--man]                                                     \\
@@ -77,8 +78,8 @@ def synopsis(ab_shortOnly=False):
             [--savejson <DIR>]                                          \\
             [-v|--verbosity <level>]                                    \\
             [--version]                                                 \\
-            [-y|--synopsis]                                             \\
-            [--optimize]
+            [-y|--synopsis]                                             
+            
 
     BRIEF EXAMPLE
 
@@ -177,6 +178,9 @@ def synopsis(ab_shortOnly=False):
         Values in the image files will be the same as the original voxel
         values in the ``mgz``, unless the [--normalize] flag is specified
         in which case this creates a single-value mask of the input image.
+
+        [--optimize]
+        If passed, optimizes the storage of the png/jpg images significantly.
 
         [-h|--help]
         If specified, show help message and exit.
