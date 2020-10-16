@@ -1,4 +1,4 @@
-mgz2imgslices 1.4.34
+mgz2imgslices 1.4.36
 ====================
 
 Quick Overview

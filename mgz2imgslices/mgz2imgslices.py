@@ -82,7 +82,7 @@ class mgz2imgslices(object):
         self.__name__                   = "mgz2imgslices"
         self.df_FSColorLUT              = None
         self.verbosity                  = 1
-        self.str_version                = '1.4.34'
+        self.str_version                = '1.4.36'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
