@@ -22,7 +22,7 @@ from    pfmisc._colors      import Colors
 import  pudb
 
 
-str_version = "1.4.38"
+str_version = "1.4.40"
 
 str_desc    = Colors.CYAN + """
 
@@ -304,11 +304,6 @@ parser.add_argument("--verbosity",
                     help    = "verbosity level for app",
                     dest    = 'verbosity',
                     default = "1")
-parser.add_argument("--optimize",
-                    help    = "Speed up the execution time",
-                    dest    = 'optimize',
-                    action  = 'store_true',
-                    default = True)
 
 # parse passed arguments
 args = parser.parse_args()
