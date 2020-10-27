@@ -196,6 +196,9 @@ Command Line Arguments
         looktup on the filtered voxel label values according to the contents of 
         the FreeSurferColorLUT.txt
 
+        [--skipAllLabels]
+        Skips all labels and converts only the whole mgz volume to png/jpg images.
+
         [-s|--skipLabelValueList <ListOfLabelNumbersToSkip>]
         If specified as a comma separated string of label numbers,
         will not create directories of those label numbers.

@@ -74,6 +74,7 @@ class mgz2imgslices(object):
         self.str_label                  = "label"
         self._b_normalize               = False
         self.str_lookupTable            = "__val__"
+        self._b_skipAllLabels           = False
         self.str_skipLabelValueList     = ""
         self.str_filterLabelValueList   = "-1"
         self.str_wholeVolume            = ""
@@ -98,6 +99,7 @@ class mgz2imgslices(object):
             if key == "label":                  self.str_label                  = value
             if key == "normalize":              self._b_normalize               = value
             if key == "lookupTable":            self.str_lookupTable            = value
+            if key == "skipAllLabels":          self._b_skipAllLabels           = value
             if key == "skipLabelValueList":     self.str_skipLabelValueList     = value
             if key == "filterLabelValueList":   self.str_filterLabelValueList   = value
             if key == "wholeVolume":            self.str_wholeVolume            = value
@@ -121,7 +123,7 @@ class mgz2imgslices(object):
             self.str_outputFileType     = '.png'
 
         if (self.str_lookupTable == '__val__') or (self.str_lookupTable == '__fs__'):
-            self.df_FSColorLUT = self.readFSColorLUT("/usr/src/mgz2imageslices/FreeSurferColorLUT.txt")
+            self.df_FSColorLUT = self.readFSColorLUT("/usr/src/FreeSurferColorLUT.txt")
         else:
             self.df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookupTable))
     def tic(self):
@@ -328,23 +330,24 @@ class mgz2imgslices(object):
         if len(self.str_wholeVolume):
             self.convert_whole_volume(np_mgz_vol)
 
-        for item in labels:
-            
-            # print(self.str_filterLabelValueList)
+        if self._b_skipAllLabels==False:
+            for item in labels:
+                
+                # print(self.str_filterLabelValueList)
 
-            if str(int(item)) in self.l_skip:
-                continue
-            
-            if self.str_filterLabelValueList != "-1" and str(int(item)) not in self.l_filter:
-                continue
+                if str(int(item)) in self.l_skip:
+                    continue
+                
+                if self.str_filterLabelValueList != "-1" and str(int(item)) not in self.l_filter:
+                    continue
 
-            str_dirname = self.lookup_table(item)
+                str_dirname = self.lookup_table(item)
 
-            self.dp.qprint("Processing %s-%s.." % (self.str_label, str_dirname), level = 1)
+                self.dp.qprint("Processing %s-%s.." % (self.str_label, str_dirname), level = 1)
 
-            os.mkdir("%s/%s-%s" % (self.str_outputDir, self.str_label, str_dirname))
+                os.mkdir("%s/%s-%s" % (self.str_outputDir, self.str_label, str_dirname))
 
-            self.nparray_to_imgs(np_mgz_vol, item)
+                self.nparray_to_imgs(np_mgz_vol, item)
 
 
 class object_factoryCreate:
@@ -377,6 +380,7 @@ class object_factoryCreate:
             label                = args.label,
             normalize            = args.normalize,
             lookupTable          = args.lookupTable,
+            skipAllLabels        = args.skipAllLabels,
             skipLabelValueList   = args.skipLabelValueList,
             filterLabelValueList = args.filterLabelValueList,
             wholeVolume          = args.wholeVolume,

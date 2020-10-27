@@ -67,6 +67,7 @@ def synopsis(ab_shortOnly=False):
             [--label <prefixForLabelDirectories>]                       \\
             [-n|--normalize]                                            \\
             [-l|--lookupTable <LUTfile>]                                \\
+            [--skipAllLabels]                                           \\
             [-s|--skipLabelValueList <ListOfVoxelValuesToSkip>]         \\
             [-f|--filterLabelValueList <ListOfVoxelValuesToInclude>]    \\
             [-w|--wholeVolume <wholeVolDirName>]                        \\
@@ -155,6 +156,9 @@ def synopsis(ab_shortOnly=False):
         really only useful for scripted cases of running this application when
         modifying the CLI is more complex than simply setting the <LUTfile> to
         ``__val__``.
+
+        [--skipAllLabels]
+        Skips all labels and converts only the whole mgz volume to png/jpg images.
 
         [-s|--skipLabelValueList <ListOfLabelNumbersToSkip>]
         If specified as a comma separated string of label numbers,
@@ -261,6 +265,11 @@ parser.add_argument('-l', '--lookupTable',
                     dest='lookupTable',
                     default = '__val__'
                     )
+parser.add_argument('--skipAllLabels',
+                    help='skip all labels and create only whole Volume images',
+                    dest='skipAllLabels',
+                    action='store_true',
+                    default=False)
 parser.add_argument('-s', '--skipLabelValueList',
                     help='Comma separated list of voxel values to skip',
                     dest='skipLabelValueList',
