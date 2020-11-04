@@ -1,4 +1,4 @@
-mgz2imgslices 1.5.42
+mgz2imgslices 1.5.44
 ====================
 
 Quick Overview
@@ -183,13 +183,13 @@ Command Line Arguments
         according to the contents of the <LUTfile>. This <LUTfile> should
         conform to the FreeSurfer lookup table format (documented elsewhere).
 
-        Note that the special <LUTfile> string ``__val__`` can be passed only when 
-        running the docker image (fnndsc/pl-mgz2imageslices) of this utility which
-        effectively means "no <LUTfile>". In this case, the numerical voxel
-        values are used for output directory names. This special string is
-        really only useful for scripted cases of running this application when
-        modifying the CLI is more complex than simply setting the <LUTfile> to
-        ``__val__``.
+        Note that the special <LUTfile> string ``__val__``, ``__fs__`` or ``__none__``
+        can be passed only when running the docker image (fnndsc/pl-mgz2imageslices) 
+        of this utility which effectively means "no <LUTfile>". 
+        In this case, the numerical voxel values are used for output directory names. 
+        This special string is really only useful for scripted cases of running 
+        this application when modifying the CLI is more complex than simply setting 
+        the <LUTfile> to ``__val__``.
 
         While running the docker image, you can also pass ``__fs__`` which will use
         the FreeSurferColorLUT.txt from within the docker container to perform a 

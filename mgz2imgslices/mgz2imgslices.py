@@ -83,7 +83,7 @@ class mgz2imgslices(object):
         self.__name__                   = "mgz2imgslices"
         self.df_FSColorLUT              = None
         self.verbosity                  = 1
-        self.str_version                = '1.5.42'
+        self.str_version                = '1.5.44'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
@@ -122,7 +122,7 @@ class mgz2imgslices(object):
         if not len(self.str_outputFileType) and not len(str_fileExtension):
             self.str_outputFileType     = '.png'
 
-        if (self.str_lookupTable == '__val__') or (self.str_lookupTable == '__fs__'):
+        if (self.str_lookupTable == '__val__') or (self.str_lookupTable == '__fs__') or (self.str_lookupTable == '__none__'):
             self.df_FSColorLUT = self.readFSColorLUT("/usr/src/FreeSurferColorLUT.txt")
         else:
             self.df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookupTable))
@@ -268,11 +268,14 @@ class mgz2imgslices(object):
                     # Generate a color image
                     np_color_image = self.save_color_image_opt(self.df_FSColorLUT, np_data)
                     
-                    str_color_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
+                    str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                         self.str_outputFileStem, current_slice, self.str_outputFileType)
-                    self.dp.qprint("Saving %s" % str_color_image_name, level = 1)
+                    self.dp.qprint("Saving %s" % str_image_name, level = 1)
 
-                    matplotlib.image.imsave(str_color_image_name, np_color_image)
+                    if(self.str_lookupTable == '__none__'):
+                        imageio.imwrite(str_image_name, np_data)
+                    else:
+                        matplotlib.image.imsave(str_image_name, np_color_image)
 
     def convert_whole_volume(self, np_mgz_vol):
         i_total_slices = np_mgz_vol.shape[0]
@@ -303,11 +306,14 @@ class mgz2imgslices(object):
                 # Generate a color image
                 np_color_image = self.save_color_image_opt(self.df_FSColorLUT, np_data)
                 
-                str_color_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
+                str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
-                self.dp.qprint("Saving %s" % str_color_image_name, level = 1)
+                self.dp.qprint("Saving %s" % str_image_name, level = 1)
 
-                matplotlib.image.imsave(str_color_image_name, np_color_image)
+                if(self.str_lookupTable == '__none__'):
+                    imageio.imwrite(str_image_name, np_data)
+                else:
+                    matplotlib.image.imsave(str_image_name, np_color_image)
 
     def run(self):
         """
