@@ -73,7 +73,7 @@ class mgz2imgslices(object):
         self._b_image                   = False
         self.str_label                  = "label"
         self._b_normalize               = False
-        self.str_lookupTable            = "__val__"
+        self.str_lookupTable            = "__none__"
         self._b_skipAllLabels           = False
         self.str_skipLabelValueList     = ""
         self.str_filterLabelValueList   = "-1"
@@ -126,6 +126,7 @@ class mgz2imgslices(object):
             self.df_FSColorLUT = self.readFSColorLUT("/usr/src/FreeSurferColorLUT.txt")
         else:
             self.df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookupTable))
+
     def tic(self):
         """
             Port of the MatLAB function of same name
@@ -229,7 +230,7 @@ class mgz2imgslices(object):
     def lookup_table(self, item):
         if self.str_lookupTable == "__val__":
             str_dirname = "00"+str(int(item))
-        elif self.str_lookupTable == "__fs__":
+        elif (self.str_lookupTable == "__fs__") or (self.str_lookupTable == "__none__"):
             str_dirname = self.df_FSColorLUT.loc[self.df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
         else:
             str_dirname = self.df_FSColorLUT.loc[self.df_FSColorLUT['#No'] == str(int(item)), 'LabelName'].iloc[0]
