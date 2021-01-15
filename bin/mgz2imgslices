@@ -263,7 +263,7 @@ parser.add_argument('-n', '--normalize',
 parser.add_argument('-l', '--lookupTable',
                     help='file contain text string lookups for voxel values',
                     dest='lookupTable',
-                    default = '__val__'
+                    default = '__none__'
                     )
 parser.add_argument('--skipAllLabels',
                     help='skip all labels and create only whole Volume images',
