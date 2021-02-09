@@ -123,7 +123,7 @@ class mgz2imgslices(object):
             self.str_outputFileType     = '.png'
 
         if (self.str_lookupTable == '__val__') or (self.str_lookupTable == '__fs__') or (self.str_lookupTable == '__none__'):
-            self.df_FSColorLUT = self.readFSColorLUT("/usr/src/FreeSurferColorLUT.txt")
+            self.df_FSColorLUT = self.readFSColorLUT("/usr/local/src/FreeSurferColorLUT.txt")
         else:
             self.df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookupTable))
 
