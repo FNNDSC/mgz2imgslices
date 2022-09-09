@@ -12,7 +12,7 @@ def readme():
 
 setup(
       name             =   'mgz2imgslices',
-      version          =   '1.5.46',
+      version          =   '2.0.0',
       description      =   '(Python) utility to filter mgz volumes to per-voxel-value directories of jpg/png image slices',
       long_description =   readme(),
       author           =   'FNNDSC',
@@ -21,9 +21,11 @@ setup(
       packages         =   ['mgz2imgslices'],
       install_requires =   ['pfmisc', 'nibabel', 'numpy', 'matplotlib', 'pillow',
                             'pandas', 'imageio'],
-      #test_suite       =   'nose.collector',
-      #tests_require    =   ['nose'],
-      scripts          =   ['bin/mgz2imgslices'],
+      entry_points      = {
+          'console_scripts': [
+              'mgz2imgslices = mgz2imgslices.__main__:main'
+          ]
+      },
       license          =   'MIT',
       zip_safe         =   False
 )

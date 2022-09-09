@@ -61,7 +61,7 @@ class mgz2imgslices(object):
             return self.str_desc
 
     def __init__(self, **kwargs):
-        
+
         self.str_desc                   = ""
         self.__name__                   = "mgz2imgslices"
 
@@ -111,7 +111,7 @@ class mgz2imgslices(object):
         if not len(self.str_inputDir):
             self.str_inputDir = os.path.dirname(self.str_inputFile)
         if not len(self.str_inputDir): self.str_inputDir = '.'
-        
+
         str_fileName, str_fileExtension  = os.path.splitext(self.str_outputFileStem)
         if len(self.str_outputFileType):
             str_fileExtension            = '.%s' % self.str_outputFileType
@@ -125,7 +125,12 @@ class mgz2imgslices(object):
         if (self.str_lookupTable == '__val__') or (self.str_lookupTable == '__fs__') or (self.str_lookupTable == '__none__'):
             self.df_FSColorLUT = self.readFSColorLUT("/usr/local/src/FreeSurferColorLUT.txt")
         else:
-            self.df_FSColorLUT = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookupTable))
+            try:
+                # First try and read from a location assumed relative to the <inputDir>
+                self.df_FSColorLUT  = self.readFSColorLUT("%s/%s" % (self.str_inputDir, self.str_lookupTable))
+            except:
+                # If that fails, try and read assuming the filename is "correct" as is...
+                self.df_FSColorLUT  = self.readFSColorLUT(self.str_lookupTable)
 
     def tic(self):
         """
@@ -165,7 +170,7 @@ class mgz2imgslices(object):
                     df_FSColorLUT['R'] = df_FSColorLUT['R'].astype(int)
                     df_FSColorLUT['G'] = df_FSColorLUT['G'].astype(int)
                     df_FSColorLUT['B'] = df_FSColorLUT['B'].astype(int)
-                    df_FSColorLUT['A'] = df_FSColorLUT['A'].astype(int)    
+                    df_FSColorLUT['A'] = df_FSColorLUT['A'].astype(int)
 
         return df_FSColorLUT
 
@@ -176,8 +181,8 @@ class mgz2imgslices(object):
         l_labels = np.unique(np_data)
         d_LUT    = {}
         for label in l_labels:
-            voxel_RGB = np.array([df_FSColorLUT["R"][label], 
-                                df_FSColorLUT["G"][label], 
+            voxel_RGB = np.array([df_FSColorLUT["R"][label],
+                                df_FSColorLUT["G"][label],
                                 df_FSColorLUT["B"][label]]).astype(np.uint8)
             d_LUT[label] = voxel_RGB
         # Flatten the label image into a vector
@@ -194,9 +199,9 @@ class mgz2imgslices(object):
 
         # Reshape back into a matrix
         M_voxel = v_voxel.reshape((256, 256, 3))
-        
+
         return M_voxel
-        
+
     def save_color_image_opt(self, df_FSColorLUT, np_data):
         np_data = np_data.astype(np.uint16)
 
@@ -268,7 +273,7 @@ class mgz2imgslices(object):
                 if(self._b_image):
                     # Generate a color image
                     np_color_image = self.save_color_image_opt(self.df_FSColorLUT, np_data)
-                    
+
                     str_image_name = "%s/%s-%s/%s-%s.%s" % (self.str_outputDir, self.str_label, str_dirname,
                         self.str_outputFileStem, current_slice, self.str_outputFileType)
                     self.dp.qprint("Saving %s" % str_image_name, level = 1)
@@ -301,12 +306,12 @@ class mgz2imgslices(object):
 
             current_slice = "%03d" %(current_slice)
             current_slice = str(current_slice)
-    
+
             if(self._b_image):
-                
+
                 # Generate a color image
                 np_color_image = self.save_color_image_opt(self.df_FSColorLUT, np_data)
-                
+
                 str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
                 self.dp.qprint("Saving %s" % str_image_name, level = 1)
@@ -339,12 +344,12 @@ class mgz2imgslices(object):
 
         if self._b_skipAllLabels==False:
             for item in labels:
-                
+
                 # print(self.str_filterLabelValueList)
 
                 if str(int(item)) in self.l_skip:
                     continue
-                
+
                 if self.str_filterLabelValueList != "-1" and str(int(item)) not in self.l_filter:
                     continue
 
@@ -370,7 +375,7 @@ class object_factoryCreate:
         str_outputFileStem, str_outputFileExtension = os.path.splitext(args.outputFileStem)
         if len(str_outputFileExtension):
             str_outputFileExtension = str_outputFileExtension.split('.')[1]
-        
+
         if not len(args.outputFileType) and len(str_outputFileExtension):
             args.outputFileType = str_outputFileExtension
 

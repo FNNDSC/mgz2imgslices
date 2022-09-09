@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 #
-# (c) 2017-2019 Fetal-Neonatal Neuroimaging & Developmental Science Center
+# (c) 2017-2022 Fetal-Neonatal Neuroimaging & Developmental Science Center
 #                     Boston Children's Hospital
 #
 #              http://childrenshospital.org/FNNDSC/
@@ -12,17 +12,20 @@
 
 import  os
 import  sys
-sys.path.insert(1, os.path.join(os.path.dirname(__file__), '..'))
 import  argparse
+
+try:
+    from    .               import mgz2imgslices
+    from    .               import __pkg, __version__
+except:
+    from mgz2imgslices      import mgz2imgslices
+    from __init__           import __pkg, __version__
 
 from    mgz2imgslices       import mgz2imgslices
 from    argparse            import RawTextHelpFormatter
 from    argparse            import ArgumentParser
 from    pfmisc._colors      import Colors
 import  pudb
-
-
-str_version = "1.5.46"
 
 str_desc    = Colors.CYAN + """
 
@@ -39,7 +42,7 @@ str_desc    = Colors.CYAN + """
     directories of image files.
 
                     -- version """ + \
-           Colors.YELLOW + str_version + Colors.CYAN + """ --
+           Colors.YELLOW + __version__ + Colors.CYAN + """ --
 
     'mgz2imgslices' filters .mgz files to more web-friendly formats such as
     png and jpg, and organizes these images in group-directories, each of
@@ -47,17 +50,7 @@ str_desc    = Colors.CYAN + """
 
 """ + Colors.NO_COLOUR
 
-def synopsis(ab_shortOnly=False):
-    scriptName = os.path.basename(sys.argv[0])
-    shortSynopsis = '''
-
-    NAME
-
-       %s
-
-    SYNOPSIS
-
-        python mgz2imgslices                                            \\
+package_CLI = '''
             -i|--inputFile <inputFile>                                  \\
             -d|--outputDir <outputDir>                                  \\
             [-I|--inputDir <inputDir>]                                  \\
@@ -78,44 +71,10 @@ def synopsis(ab_shortOnly=False):
             [--savejson <DIR>]                                          \\
             [-v|--verbosity <level>]                                    \\
             [--version]                                                 \\
-            [-y|--synopsis]                                             
-            
+            [-y|--synopsis]
+'''
 
-    BRIEF EXAMPLE
-
-        * Bare bones execution
-
-            mgz2imgslices -i aparc+aseg.mgz -d /tmp/filtered
-
-    ''' % scriptName
-
-    description = '''
-
-    DESCRIPTION
-
-        ``mgz2imgslices`` is a simple Python utility that filters "labels"
-        from ``mgz`` volume files and saves each label set as slices of
-        (by default) ``png`` files, organized into a series of directories,
-        one per label set.
-
-        An ``mgz`` format file simply contains a 3D volume data structure of
-        image values. Often these values are interpreted to be image
-        intensities. Sometimes, however, they can be interpreted as label
-        identifiers. Regardless of the interpretation, the volume image data
-        is simply a number value in each voxel of the volume.
-
-        This script will scan across the input ``mgz`` volume, and for each
-        voxel value create a new output directory. In that directory will be
-        a set of (typically) ``png`` images, one per slice of the original
-        volume. These images will only contain the voxels in the original
-        dataset that all had that particular voxel value.
-
-        In this manner, ``mgz2imgslices`` can also be thought of as a dynamic
-        filter of an ``mgz`` volume file that filters each voxel value into
-        its own output directory of ``png`` image files.
-
-    ARGS
-
+package_argSynopsis = '''
         [-i|--inputFile  <inputFile>]
         Input file to convert. Should be an ``mgz`` file.
 
@@ -131,12 +90,12 @@ def synopsis(ab_shortOnly=False):
         Should be a ``png`` or ``jpg``.
 
         [--saveImages]
-        If specified as True(boolean), will save the slices of the mgz file as 
-        ".png" files along with the numpy files.
+        If specified as True(boolean), will save the slices of the mgz file as
+        ".png" (or ".jpg") files along with the numpy files.
 
         [--label <prefixForLabelDirectories>]
-        Prefixes the string <prefixForLabelDirectories> to each filtered 
-        directory name. This is mostly for possible downstream processing, 
+        Prefixes the string <prefixForLabelDirectories> to each filtered
+        directory name. This is mostly for possible downstream processing,
         allowing a subsequent operation to easily determine which of the output
         directories correspond to labels.
 
@@ -205,9 +164,55 @@ def synopsis(ab_shortOnly=False):
 
         [-y|--synopsis]
         Show short synopsis.
-        
-        [--optimize]
-        Speed up the run time
+'''
+
+def synopsis(ab_shortOnly=False):
+    scriptName = os.path.basename(sys.argv[0])
+    shortSynopsis = '''
+
+    NAME
+
+       %s
+
+    SYNOPSIS ''' % __pkg.name + Colors.GREEN + '''
+
+        %s  '''  % __pkg.name + package_CLI +  Colors.NO_COLOUR + '''
+
+    BRIEF EXAMPLE
+
+        * Bare bones execution
+
+            mgz2imgslices -i aparc+aseg.mgz -d /tmp/filtered
+
+    '''
+
+    description = '''
+
+    DESCRIPTION
+
+        ``mgz2imgslices`` is a simple Python utility that filters "labels"
+        from ``mgz`` volume files and saves each label set as slices of
+        (by default) ``png`` files, organized into a series of directories,
+        one per label set.
+
+        An ``mgz`` format file simply contains a 3D volume data structure of
+        image values. Often these values are interpreted to be image
+        intensities. Sometimes, however, they can be interpreted as label
+        identifiers. Regardless of the interpretation, the volume image data
+        is simply a number value in each voxel of the volume.
+
+        This script will scan across the input ``mgz`` volume, and for each
+        voxel value create a new output directory. In that directory will be
+        a set of (typically) ``png`` images, one per slice of the original
+        volume. These images will only contain the voxels in the original
+        dataset that all had that particular voxel value.
+
+        In this manner, ``mgz2imgslices`` can also be thought of as a dynamic
+        filter of an ``mgz`` volume file that filters each voxel value into
+        its own output directory of ``png`` image files.
+
+    ARGS
+    ''' + Colors.YELLOW + package_argSynopsis + Colors.NO_COLOUR + '''
 
     GITHUB
 
@@ -248,7 +253,7 @@ parser.add_argument('--saveImages',
                     dest='saveImages',
                     action= 'store_true',
                     default = False
-                    )                    
+                    )
 parser.add_argument('--label',
                     help='prefix a label to all the label directories',
                     dest='label',
@@ -310,30 +315,32 @@ parser.add_argument("--verbosity",
                     dest    = 'verbosity',
                     default = "1")
 
-# parse passed arguments
-args = parser.parse_args()
+def main(argv = None):
+    # parse passed arguments
+    args = parser.parse_args()
 
-# Do some minor CLI checks
-if args.b_version:
-    print("Version: %s" % str_version)
-    sys.exit(1)
+    # Do some minor CLI checks
+    if args.b_version:
+        print("Name:    %s\nVersion: %s" % (__pkg.name, __version__))
+        return 1
 
-if args.man or args.synopsis:
-    print(str_desc)
-    if args.man:
-        str_help = synopsis(False)
-    else:
-        str_help = synopsis(True)
-    print(str_help)
-    sys.exit(1)
+    if args.man or args.synopsis:
+        print(str_desc)
+        if args.man:
+            str_help = synopsis(False)
+        else:
+            str_help = synopsis(True)
+        print(str_help)
+        return 2
 
-# Create the object
-imgConverter    = mgz2imgslices.object_factoryCreate(args).C_convert
+    # Create the object
+    imgConverter    = mgz2imgslices.object_factoryCreate(args).C_convert
 
-# And now run it!
-imgConverter.tic()
-imgConverter.run()
-if args.printElapsedTime: print("Elapsed time = %f seconds" % imgConverter.toc())
-sys.exit(0)
+    # And now run it!
+    imgConverter.tic()
+    imgConverter.run()
+    if args.printElapsedTime: print("Elapsed time = %f seconds" % imgConverter.toc())
+    return 0
 
-
+if __name__ == "__main__":
+    sys.exit(main())
