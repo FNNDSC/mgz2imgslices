@@ -50,34 +50,70 @@ str_desc    = Colors.CYAN + """
 
 """ + Colors.NO_COLOUR
 
-package_CLI = '''
-            -i|--inputFile <inputFile>                                  \\
-            -d|--outputDir <outputDir>                                  \\
-            [-I|--inputDir <inputDir>]                                  \\
-            [-o|--outputFileStem]<outputFileStem>]                      \\
-            [-t|--outputFileType <outputFileType>]                      \\
-            [--saveImages]                                              \\
-            [--label <prefixForLabelDirectories>]                       \\
-            [-n|--normalize]                                            \\
-            [-l|--lookupTable <LUTfile>]                                \\
-            [--skipAllLabels]                                           \\
-            [-s|--skipLabelValueList <ListOfVoxelValuesToSkip>]         \\
-            [-f|--filterLabelValueList <ListOfVoxelValuesToInclude>]    \\
-            [-w|--wholeVolume <wholeVolDirName>]                        \\
-            [-h|--help]                                                 \\
-            [--json]                                                    \\
-            [--man]                                                     \\
-            [--meta]                                                    \\
-            [--savejson <DIR>]                                          \\
-            [-v|--verbosity <level>]                                    \\
-            [--version]                                                 \\
-            [-y|--synopsis]
+package_CLIcore = '''
+        -i|--inputFile <inputFile>                                              \\
+        [-d|--outputDir <outputDir>]                                            \\
+        [-I|--inputDir <inputDir>]                                              \\
+        [-h|--help]                                                             \\
+        [--json]                                                                \\
+        [--man]                                                                 \\
+        [--meta]                                                                \\
+        [--savejson <DIR>]                                                      \\
+        [-v|--verbosity <level>]                                                \\
+        [--version]                                                             \\
+        [-y|--synopsis]
 '''
 
-package_argSynopsis = '''
-        [-i|--inputFile  <inputFile>]
-        Input file to convert. Should be an ``mgz`` file.
+package_CLI = '''
+        [-o|--outputFileStem]<outputFileStem>]                                  \\
+        [-t|--outputFileType <outputFileType>]                                  \\
+        [--saveImages]                                                          \\
+        [--label <prefixForLabelDirectories>]                                   \\
+        [-n|--normalize]                                                        \\
+        [-l|--lookupTable <LUTfile>]                                            \\
+        [--skipAllLabels]                                                       \\
+        [-s|--skipLabelValueList <ListOfVoxelValuesToSkip>]                     \\
+        [-f|--filterLabelValueList <ListOfVoxelValuesToInclude>]                \\
+        [-w|--wholeVolume <wholeVolDirName>]                                    \\'''
 
+package_argSynopsisCore = '''
+        [-I|--inputDir <inputDir>]
+        Directory containing input filespace.
+
+        -i|--inputFile  <inputFile>
+        Input file to convert (relative to <inputDir>).
+        Should be an ``mgz`` file.
+
+        [-d|--outputDir <outputDir>]
+        Directory containing output filespace.
+
+        [-h|--help]
+        If specified, show help message and exit.
+
+        [--json]
+        If specified, show json representation of app and exit.
+
+        [--man]
+        If specified, print (this) man page and exit.
+
+        [--meta]
+        If specified, print plugin meta np_data and exit.
+
+        [--savejson <DIR>]
+        If specified, save json representation file to DIR and exit.
+
+        [-v <level>|--verbosity <level>]
+        Verbosity level for app. Not used currently.
+
+        [--version]
+        If specified, print version number and exit.
+
+        [-y|--synopsis]
+        Show short synopsis.
+
+        '''
+
+package_argSynopsis = '''
         [-o|--outputFileStem <outputFileStem>]
         The output file stem to store image conversion. If this is specified
         with an extension, this extension will be used to specify the
@@ -140,30 +176,6 @@ package_argSynopsis = '''
         Values in the image files will be the same as the original voxel
         values in the ``mgz``, unless the [--normalize] flag is specified
         in which case this creates a single-value mask of the input image.
-
-        [-h|--help]
-        If specified, show help message and exit.
-
-        [--json]
-        If specified, show json representation of app and exit.
-
-        [--man]
-        If specified, print (this) man page and exit.
-
-        [--meta]
-        If specified, print plugin meta np_data and exit.
-
-        [--savejson <DIR>]
-        If specified, save json representation file to DIR and exit.
-
-        [-v <level>|--verbosity <level>]
-        Verbosity level for app. Not used currently.
-
-        [--version]
-        If specified, print version number and exit.
-
-        [-y|--synopsis]
-        Show short synopsis.
 '''
 
 def synopsis(ab_shortOnly=False):
@@ -176,7 +188,7 @@ def synopsis(ab_shortOnly=False):
 
     SYNOPSIS ''' % __pkg.name + Colors.GREEN + '''
 
-        %s  '''  % __pkg.name + package_CLI +  Colors.NO_COLOUR + '''
+        %s  '''  % __pkg.name + package_CLI +  package_CLIcore +  Colors.NO_COLOUR + '''
 
     BRIEF EXAMPLE
 
@@ -212,7 +224,7 @@ def synopsis(ab_shortOnly=False):
         its own output directory of ``png`` image files.
 
     ARGS
-    ''' + Colors.YELLOW + package_argSynopsis + Colors.NO_COLOUR + '''
+    ''' + Colors.YELLOW + package_argSynopsis + package_argSynopsisCore + Colors.NO_COLOUR + '''
 
     GITHUB
 
@@ -235,14 +247,14 @@ parser.add_argument("-I", "--inputDir",
                     help    = "input directory",
                     dest    = 'inputDir',
                     default = '')
-parser.add_argument('-o', '--outputFileStem',
-                    help='name of the output files within the outputDir',
-                    dest='outputFileStem'
-                    )
 parser.add_argument("-d", "--outputDir",
                     help    = "output image directory",
                     dest    = 'outputDir',
                     default = '.')
+parser.add_argument('-o', '--outputFileStem',
+                    help='name of the output files within the outputDir',
+                    dest='outputFileStem'
+                    )
 parser.add_argument('-t', '--outputFileType',
                     help='output image file format',
                     dest='outputFileType',
