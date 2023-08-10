@@ -83,7 +83,7 @@ class mgz2imgslices(object):
         self.__name__                   = "mgz2imgslices"
         self.df_FSColorLUT              = None
         self.verbosity                  = 1
-        self.str_version                = '1.5.44'
+        self.str_version                = '2.1.0'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
@@ -123,7 +123,12 @@ class mgz2imgslices(object):
             self.str_outputFileType     = '.png'
 
         if (self.str_lookupTable == '__val__') or (self.str_lookupTable == '__fs__') or (self.str_lookupTable == '__none__'):
-            self.df_FSColorLUT = self.readFSColorLUT("/usr/local/src/FreeSurferColorLUT.txt")
+            # Assuming you are running this code inside a container where there a LUT file
+            # visible at /usr/local/src/FreeSurferColorLUT.txt
+            try:
+                self.df_FSColorLUT = self.readFSColorLUT("/usr/local/src/FreeSurferColorLUT.txt")
+            except Exception as ex:
+                print("No Look Up file is being used.")
         else:
             try:
                 # First try and read from a location assumed relative to the <inputDir>

@@ -14,14 +14,17 @@ import  os
 import  sys
 import  argparse
 
-try:
-    from    .               import mgz2imgslices
-    from    .               import __pkg, __version__
-except:
-    from mgz2imgslices      import mgz2imgslices
-    from __init__           import __pkg, __version__
+# try:
+#    from    .               import mgz2imgslices
+#    from    .               import __pkg, __version__
+# except:
+#    from mgz2imgslices      import mgz2imgslices
+#    from __init__           import __pkg, __version__
 
-from    mgz2imgslices       import mgz2imgslices
+import mgz2imgslices
+from mgz2imgslices import __pkg, __version__
+from mgz2imgslices.mgz2imgslices import object_factoryCreate
+
 from    argparse            import RawTextHelpFormatter
 from    argparse            import ArgumentParser
 from    pfmisc._colors      import Colors
@@ -346,7 +349,7 @@ def main(argv = None):
         return 2
 
     # Create the object
-    imgConverter    = mgz2imgslices.object_factoryCreate(args).C_convert
+    imgConverter = object_factoryCreate(args).C_convert
 
     # And now run it!
     imgConverter.tic()

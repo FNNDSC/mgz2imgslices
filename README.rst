@@ -1,4 +1,4 @@
-mgz2imgslices 1.5.46
+mgz2imgslices 2.1.0
 ====================
 
 Quick Overview
