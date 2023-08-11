@@ -83,7 +83,7 @@ class mgz2imgslices(object):
         self.__name__                   = "mgz2imgslices"
         self.df_FSColorLUT              = None
         self.verbosity                  = 1
-        self.str_version                = '2.1.0'
+        self.str_version                = '2.1.1'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
@@ -314,9 +314,6 @@ class mgz2imgslices(object):
 
             if(self._b_image):
 
-                # Generate a color image
-                np_color_image = self.save_color_image_opt(self.df_FSColorLUT, np_data)
-
                 str_image_name = "%s/%s/%s-%s.%s" % (self.str_outputDir, str_whole_dirname,
                     self.str_outputFileStem, current_slice, self.str_outputFileType)
                 self.dp.qprint("Saving %s" % str_image_name, level = 1)
@@ -324,6 +321,8 @@ class mgz2imgslices(object):
                 if(self.str_lookupTable == '__none__'):
                     imageio.imwrite(str_image_name, np_data)
                 else:
+                    # Generate a color image
+                    np_color_image = self.save_color_image_opt(self.df_FSColorLUT, np_data)
                     matplotlib.image.imsave(str_image_name, np_color_image)
 
     def run(self):
