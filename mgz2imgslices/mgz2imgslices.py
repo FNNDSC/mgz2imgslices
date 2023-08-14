@@ -83,7 +83,7 @@ class mgz2imgslices(object):
         self.__name__                   = "mgz2imgslices"
         self.df_FSColorLUT              = None
         self.verbosity                  = 1
-        self.str_version                = '2.1.2'
+        self.str_version                = '2.1.3'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
@@ -208,7 +208,7 @@ class mgz2imgslices(object):
         return M_voxel
 
     def save_color_image_opt(self, df_FSColorLUT, np_data):
-        set_trace(term_size=(253, 62), host = '0.0.0.0', port = 7900)
+        #set_trace(term_size=(253, 62), host = '0.0.0.0', port = 7900)
         np_data = np_data.astype(np.uint16)
 
         labels = np.unique(np_data)
