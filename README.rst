@@ -1,4 +1,4 @@
-mgz2imgslices 2.1.1
+mgz2imgslices 2.1.2
 ====================
 
 Quick Overview

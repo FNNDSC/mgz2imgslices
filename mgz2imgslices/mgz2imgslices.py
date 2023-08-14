@@ -10,12 +10,12 @@ import imageio
 import pandas as pd
 import re
 import time
-import pudb
+from pudb.remote import set_trace
 import skimage
 from skimage.io import imread
 from skimage.io import imshow
 from skimage.io import imsave
-import matplotlib
+import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(__file__))
 import  pfmisc
@@ -83,7 +83,7 @@ class mgz2imgslices(object):
         self.__name__                   = "mgz2imgslices"
         self.df_FSColorLUT              = None
         self.verbosity                  = 1
-        self.str_version                = '2.1.1'
+        self.str_version                = '2.1.2'
         self.dp                         = pfmisc.debug(
                                             verbosity   = self.verbosity,
                                             within      = self.__name__
@@ -208,6 +208,7 @@ class mgz2imgslices(object):
         return M_voxel
 
     def save_color_image_opt(self, df_FSColorLUT, np_data):
+        set_trace(term_size=(253, 62), host = '0.0.0.0', port = 7900)
         np_data = np_data.astype(np.uint16)
 
         labels = np.unique(np_data)
@@ -286,7 +287,7 @@ class mgz2imgslices(object):
                     if(self.str_lookupTable == '__none__'):
                         imageio.imwrite(str_image_name, np_data)
                     else:
-                        matplotlib.image.imsave(str_image_name, np_color_image)
+                        plt.imsave(str_image_name, np_color_image)
 
     def convert_whole_volume(self, np_mgz_vol):
         i_total_slices = np_mgz_vol.shape[0]
@@ -323,7 +324,7 @@ class mgz2imgslices(object):
                 else:
                     # Generate a color image
                     np_color_image = self.save_color_image_opt(self.df_FSColorLUT, np_data)
-                    matplotlib.image.imsave(str_image_name, np_color_image)
+                    plt.imsave(str_image_name, np_color_image)
 
     def run(self):
         """
